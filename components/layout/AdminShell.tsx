@@ -25,7 +25,8 @@ export function AdminShell({ children, headerRight }: Props) {
               href="/"
               className="rounded-lg px-3 py-2 text-sm text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)]/60 hover:text-[var(--color-text)]"
             >
-              Back to site
+              <span className="sm:hidden">Site</span>
+              <span className="hidden sm:inline">Back to site</span>
             </Link>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 
@@ -17,6 +17,14 @@ export const metadata: Metadata = {
   description: "Daily morning & evening live classes. Register for ₹499 or via your company.",
 };
 
+/** Mobile-first: proper scaling + theme color for browser chrome. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#f4f1ec",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +35,7 @@ export default function RootLayout({
       lang="en"
       className={`${fontDisplay.variable} ${fontBody.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-body)] antialiased">
+      <body className="flex min-h-dvh min-h-full flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] font-[family-name:var(--font-body)] antialiased">
         {children}
       </body>
     </html>

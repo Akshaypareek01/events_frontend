@@ -53,14 +53,18 @@ export function AdminHome() {
       <AdminStatsBar />
 
       <div className="mt-8 border-b border-[var(--color-border)]">
-        <nav className="flex flex-wrap gap-1" aria-label="Admin sections">
+        <div className="-mx-4 overflow-x-auto overscroll-x-contain px-4 pb-px [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
+          <nav
+            className="flex w-max min-w-full flex-nowrap gap-1 sm:w-auto sm:flex-wrap"
+            aria-label="Admin sections"
+          >
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
               className={cn(
-                "relative rounded-t-lg px-4 py-2.5 text-sm font-medium transition-colors",
+                "relative shrink-0 rounded-t-lg px-3 py-2.5 text-sm font-medium transition-colors sm:px-4",
                 tab === t.id
                   ? "bg-[var(--color-surface)] text-[var(--color-text)] shadow-[inset_0_-2px_0_0_var(--color-primary)]"
                   : "text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)]/60 hover:text-[var(--color-text)]",
@@ -69,7 +73,8 @@ export function AdminHome() {
               {t.label}
             </button>
           ))}
-        </nav>
+          </nav>
+        </div>
       </div>
 
       <section className="mt-6">

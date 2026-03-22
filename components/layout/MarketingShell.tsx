@@ -6,11 +6,11 @@ export function MarketingShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-full flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
       <header className="border-b border-[var(--color-border)] bg-[var(--color-surface)]/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6">
           <Link href="/" className="font-[family-name:var(--font-display)] text-lg tracking-tight">
             Samsara Yoga
           </Link>
-          <nav className="flex items-center gap-3 text-sm">
+          <nav className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:justify-end">
             <a href="#schedule" className="text-[var(--color-muted)] hover:text-[var(--color-text)]">
               Schedule
             </a>

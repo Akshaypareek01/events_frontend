@@ -6,7 +6,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-full flex-col bg-[var(--color-bg)]">
       <header className="border-b border-[var(--color-border)] bg-[var(--color-surface)]/90">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6">
           <span className="font-[family-name:var(--font-display)] text-lg">Dashboard</span>
           <Link href="/" className="text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">
             Home

@@ -26,3 +26,13 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
 }
+
+/* Reduce tap delay on interactive elements (mobile). */
+@media (hover: none) {
+  button,
+  a[href],
+  input[type="submit"],
+  label {
+    touch-action: manipulation;
+  }
+}
