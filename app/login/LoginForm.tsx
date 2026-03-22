@@ -15,7 +15,12 @@ const COOLDOWN_SEC = 60;
 type OtpErrJson = {
   message?: string;
   code?: string;
-  details?: { retryAfterSec?: number };
+  details?: {
+    retryAfterSec?: number;
+    needsPayment?: boolean;
+    userId?: string;
+    payToken?: string;
+  };
 };
 
 export function LoginForm() {
@@ -29,6 +34,8 @@ export function LoginForm() {
   const [serverRetrySec, setServerRetrySec] = useState<number | null>(null);
   /** Successful sends this session (info only; server enforces hard cap). */
   const [sendCount, setSendCount] = useState(0);
+  /** Set when API says user must pay before OTP; links to `/pay` with token. */
+  const [payHref, setPayHref] = useState<string | null>(null);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -49,8 +56,13 @@ export function LoginForm() {
     return () => window.clearInterval(t);
   }, [serverRetrySec]);
 
+  useEffect(() => {
+    setPayHref(null);
+  }, [email]);
+
   const requestOtp = useCallback(async () => {
     setErr(null);
+    setPayHref(null);
     setBusy(true);
     try {
       const res = await fetch(`${getApiBaseUrl()}/api/v1/auth/request-otp`, {
@@ -65,6 +77,18 @@ export function LoginForm() {
         } else {
           setServerRetrySec(null);
         }
+        if (
+          data.code === "NO_ACCESS" &&
+          data.details?.needsPayment &&
+          data.details.userId &&
+          data.details.payToken
+        ) {
+          const q = new URLSearchParams({
+            userId: data.details.userId,
+            token: data.details.payToken,
+          });
+          setPayHref(`/pay?${q.toString()}`);
+        }
         setErr(data.message ?? "Could not send code");
         return false;
       }
@@ -72,6 +96,7 @@ export function LoginForm() {
       setSendCount((c) => c + 1);
       setResendCooldown(COOLDOWN_SEC);
       setServerRetrySec(null);
+      setPayHref(null);
       setStep("otp");
       return true;
     } catch {
@@ -122,6 +147,7 @@ export function LoginForm() {
     setErr(null);
     setResendCooldown(0);
     setServerRetrySec(null);
+    setPayHref(null);
   }
 
   const resendDisabled = busy || resendCooldown > 0 || serverRetrySec !== null;
@@ -157,6 +183,11 @@ export function LoginForm() {
               />
             </div>
             {err && <FieldError>{err}</FieldError>}
+            {payHref && (
+              <Button type="button" onClick={() => router.push(payHref)}>
+                Pay now
+              </Button>
+            )}
             <Button type="submit" disabled={busy}>
               {busy ? <Spinner className="size-4" /> : "Send code"}
             </Button>
