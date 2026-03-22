@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
@@ -20,6 +20,30 @@ export function PayClient() {
   const [err, setErr] = useState<string | null>(null);
 
   const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "";
+
+  /**
+   * `next/script` `onLoad` often does not run after client-side navigation when the script is
+   * already cached — `scriptReady` stayed false until a full refresh. Detect `window.Razorpay`
+   * directly + `onReady`, with a short poll as fallback.
+   */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.Razorpay) {
+      setScriptReady(true);
+      return;
+    }
+    const id = window.setInterval(() => {
+      if (window.Razorpay) {
+        setScriptReady(true);
+        window.clearInterval(id);
+      }
+    }, 50);
+    const timeout = window.setTimeout(() => window.clearInterval(id), 20_000);
+    return () => {
+      window.clearInterval(id);
+      window.clearTimeout(timeout);
+    };
+  }, []);
 
   const pay = useCallback(async () => {
     if (!userId || !keyId) return;
@@ -124,9 +148,11 @@ export function PayClient() {
   return (
     <MarketingShell>
       <Script
+        id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="afterInteractive"
         onLoad={() => setScriptReady(true)}
+        onReady={() => setScriptReady(true)}
       />
       <div className="mx-auto max-w-lg px-4 py-16">
         <h1 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-text)]">

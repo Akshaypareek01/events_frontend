@@ -167,8 +167,8 @@ export function LoginForm() {
           codes per hour; wait 60s between sends.
         </p>
         {step === "email" ? (
-          <form onSubmit={onSubmitEmail} className="mt-8 space-y-4">
-            <div>
+          <form onSubmit={onSubmitEmail} className="mt-8 space-y-6">
+            <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
@@ -182,15 +182,34 @@ export function LoginForm() {
                 className="mt-1"
               />
             </div>
-            {err && <FieldError>{err}</FieldError>}
-            {payHref && (
-              <Button type="button" onClick={() => router.push(payHref)}>
-                Pay now
-              </Button>
+
+            {err && (
+              <div className="space-y-4">
+                <FieldError>{err}</FieldError>
+                {payHref && (
+                  <Button
+                    type="button"
+                    className="w-full"
+                    onClick={() => router.push(payHref)}
+                  >
+                    Pay now
+                  </Button>
+                )}
+              </div>
             )}
-            <Button type="submit" disabled={busy}>
-              {busy ? <Spinner className="size-4" /> : "Send code"}
-            </Button>
+
+            <div className="flex flex-col gap-3">
+              <Button
+                type="submit"
+                className="w-full sm:w-auto"
+                disabled={busy || Boolean(payHref)}
+                title={
+                  payHref ? "Complete payment first, then request a login code" : undefined
+                }
+              >
+                {busy ? <Spinner className="size-4" /> : "Send code"}
+              </Button>
+            </div>
           </form>
         ) : (
           <form onSubmit={verifyOtp} className="mt-8 space-y-4">
