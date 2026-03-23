@@ -25,9 +25,8 @@ nav{
   padding:10px 48px;
 }
 .nav-left{display:flex;align-items:center;gap:14px;}
-.nav-logo-wrap{flex-shrink:0;display:flex;align-items:center;background:none;border:none;padding:0;overflow:visible;}
-.nav-logo-wrap img{height:clamp(52px,7vw,72px);width:auto;display:block;object-fit:contain;}
-.nav-brand{font-family:'Cinzel',serif;font-size:12px;letter-spacing:2.5px;color:var(--text-mid);}
+.nav-logo-main{display:flex;align-items:center;text-decoration:none;line-height:0;flex-shrink:0;}
+.nav-logo-main img{height:clamp(40px,5.5vw,54px);width:auto;max-width:min(340px,70vw);display:block;object-fit:contain;}
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:.3s;}
 .nav-links a:hover{color:var(--saffron);}
@@ -46,22 +45,20 @@ nav{
 
 /* HERO */
 .hero{
-  padding-top:66px;
-  display:grid;grid-template-columns:1fr 1fr;
-  min-height:100vh;background:var(--warm);
+  padding-top:52px;
+  min-height:auto;
+  background:var(--warm);
   position:relative;overflow:hidden;
 }
-.hero-divider{
-  position:absolute;right:50%;top:0;bottom:0;width:1px;
-  background:linear-gradient(to bottom,transparent,var(--border) 20%,var(--border) 80%,transparent);
-}
 .hero-left{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:80px 60px 80px 80px;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:16px 24px 24px;
+  max-width:920px;
+  margin:0 auto;
 }
 .eyebrow{
   display:inline-flex;align-items:center;gap:12px;
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--saffron);margin-bottom:28px;
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--saffron);margin-bottom:12px;
 }
 .eyebrow-line{width:28px;height:1px;background:var(--saffron);}
 .hero h1{
@@ -70,36 +67,16 @@ nav{
   color:var(--text);margin-bottom:10px;
 }
 .hero h1 em{font-style:italic;color:var(--saffron);}
-.hero-date{font-family:'Cinzel',serif;font-size:12px;letter-spacing:5px;color:var(--text-lt);margin-bottom:26px;}
-.hero-sub{font-size:16px;line-height:1.9;color:var(--text-mid);max-width:420px;margin-bottom:40px;font-weight:300;}
+.hero-date{font-family:'Cinzel',serif;font-size:12px;letter-spacing:5px;color:var(--text-lt);margin-bottom:12px;}
+.hero-sub{font-size:16px;line-height:1.9;color:var(--text-mid);max-width:420px;margin-bottom:18px;font-weight:300;}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
 .btn-primary{background:var(--saffron);color:#fff;padding:16px 36px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;text-decoration:none;display:inline-block;transition:.3s;}
 .btn-primary:hover{background:var(--saffron-dk);transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,84,26,.3);}
 .btn-outline{background:transparent;color:var(--saffron);padding:16px 36px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;border:1.5px solid var(--saffron);border-radius:2px;cursor:pointer;text-decoration:none;display:inline-block;transition:.3s;}
 .btn-outline:hover{background:rgba(232,84,26,.05);transform:translateY(-2px);}
-.hero-stats{display:flex;gap:36px;margin-top:44px;padding-top:28px;border-top:1px solid var(--border);}
+.hero-stats{display:flex;gap:36px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
 .stat-num{font-family:'Playfair Display',serif;font-size:34px;font-weight:500;color:var(--saffron);line-height:1;}
 .stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lt);margin-top:5px;}
-
-/* HERO RIGHT — Banner image */
-.hero-right{
-  display:flex;flex-direction:column;
-  position:relative;overflow:hidden;
-}
-.hero-banner-img{
-  width:100%;height:100%;object-fit:contain;object-position:center center;
-  display:block;background:var(--warm);
-}
-/* Logo strip below guru inside right panel */
-.hero-logo-strip{
-  position:absolute;bottom:0;left:0;right:0;
-  background:rgba(255,248,235,0.92);backdrop-filter:blur(8px);
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;gap:32px;
-  padding:16px 24px;
-}
-.hero-logo-strip img{height:52px;width:auto;object-fit:contain;}
-.logo-sep{width:1px;height:40px;background:var(--border);}
 
 /* SCROLL TICKER */
 .scroll-track-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--white);}
@@ -216,10 +193,8 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
   nav{padding:10px 20px;}
   .nav-links{display:none;}
   .hamburger{display:flex;}
-  .hero{grid-template-columns:1fr;}
-  .hero-left{padding:60px 24px 40px;align-items:center;text-align:center;}
-  .hero-sub{margin:0 auto 40px;}
-  .hero-right{min-height:380px;}
+  .hero-left{padding:14px 20px 20px;align-items:center;text-align:center;}
+  .hero-sub{margin:0 auto 18px;}
   .about-grid,.testi-grid{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px;}
   .section{padding:68px 24px;}
@@ -244,10 +219,7 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
 <!-- NAV -->
 <nav>
   <div class="nav-left">
-    <div class="nav-logo-wrap"><img src="/adaptive-icon.png" alt="Samsara Wellness"></div>
-    <div>
-      <div class="nav-brand">SAMSARA WELLNESS</div>
-    </div>
+    <a href="/" class="nav-logo-main" target="_top" rel="noopener noreferrer"><img src="/samsaralogomain.png" alt="Samsara"></a>
   </div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
@@ -267,7 +239,6 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-divider"></div>
   <div class="hero-left">
     <div class="eyebrow reveal d1"><span class="eyebrow-line"></span>JUNE 21, 2026<span class="eyebrow-line"></span></div>
     <h1 class="reveal d2">International<br><em>Yoga Day</em><br>2026</h1>
@@ -284,15 +255,10 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
       <div class="stat"><div class="stat-num">180+</div><div class="stat-label">Countries</div></div>
     </div>
   </div>
-
-  <!-- RIGHT: Banner image with logos below -->
-  <div class="hero-right reveal d2">
-    <img src="/International%20Yoga%20Day.png" alt="International Yoga Day — Yoga Mahotsav" class="hero-banner-img">
-  </div>
 </section>
 
 <!-- SCROLLING TICKER -->
-<div class="scroll-track-wrap">
+<!-- <div class="scroll-track-wrap">
   <div class="scroll-track">
     <div class="scroll-item"><span class="scroll-dot"></span>AYUSH MINISTRY OF INDIA</div>
     <div class="scroll-item"><span class="scroll-dot"></span>SAMSARA WELLNESS</div>
@@ -319,7 +285,7 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
     <div class="scroll-item"><span class="scroll-dot"></span>DELOITTE INDIA</div>
     <div class="scroll-item"><span class="scroll-dot"></span>MANDUKA INDIA</div>
   </div>
-</div>
+</div> -->
 
 <!-- ABOUT -->
 <section class="section" id="about">
@@ -401,7 +367,7 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="section section-alt" id="testimonials">
+<!-- <section class="section section-alt" id="testimonials">
   <div class="section-header reveal">
     <span class="s-eyebrow">Community Voice</span>
     <h2 class="s-title">What <em>Participants</em> Say</h2>
@@ -415,10 +381,10 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
     <div class="testi-card"><div class="testi-google"><span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">le</span></div><div class="testi-stars">★★★★★</div><p class="testi-text">"The sunrise session at Cubbon Park was magical. Guided by Master Vikram under the open sky — this is why yoga is India's greatest gift to the world."</p><div class="testi-author"><div class="testi-avatar">N</div><div><div class="testi-name">Neha Gupta</div><div class="testi-meta">New Delhi · June 2025</div></div></div></div>
     <div class="testi-card"><div class="testi-google"><span class="g1">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">le</span></div><div class="testi-stars">★★★★★</div><p class="testi-text">"As a complete beginner, the Samsara team made me feel at home. I left with a daily practice, new friends, and profound peace. Life-changing."</p><div class="testi-author"><div class="testi-avatar">K</div><div><div class="testi-name">Kavitha Reddy</div><div class="testi-meta">Hyderabad · June 2025</div></div></div></div>
   </div>
-</section>
+</section> -->
 
 <!-- PRESS -->
-<section class="section" id="press">
+<!-- <section class="section" id="press">
   <div class="section-header reveal">
     <span class="s-eyebrow">Media Coverage</span>
     <h2 class="s-title">Featured in the <em>Press</em></h2>
@@ -436,7 +402,7 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
     <div class="press-item"><div class="press-name">ZEE NEWS</div></div>
     <div class="press-item"><div class="press-name">ANI WIRE</div></div>
   </div>
-</section>
+</section> -->
 
 <!-- SPONSORS -->
 <section class="section section-alt" id="sponsors">
@@ -450,16 +416,16 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
     <div class="tier tier-gold"><div class="tier-label">✦ Title Sponsor ✦</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon">🌿</div><div class="sp-name">Patanjali Ayurved</div></div><div class="sponsor-item"><div class="sp-icon">🏥</div><div class="sp-name">Apollo Wellness</div></div></div></div>
     <div class="tier tier-silver"><div class="tier-label">Gold Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon">🌱</div><div class="sp-name">Himalaya Herbals</div></div><div class="sponsor-item"><div class="sp-icon">💧</div><div class="sp-name">Bisleri</div></div><div class="sponsor-item"><div class="sp-icon">🧘</div><div class="sp-name">Manduka India</div></div><div class="sponsor-item"><div class="sp-icon">📱</div><div class="sp-name">Cult.fit</div></div></div></div>
     <div class="tier tier-bronze"><div class="tier-label">Supporting Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon">☕</div><div class="sp-name">Brew &amp; Bloom</div></div><div class="sponsor-item"><div class="sp-icon">🍃</div><div class="sp-name">Organic India</div></div><div class="sponsor-item"><div class="sp-icon">📸</div><div class="sp-name">Canon India</div></div><div class="sponsor-item"><div class="sp-icon">🎵</div><div class="sp-name">Saregama</div></div><div class="sponsor-item"><div class="sp-icon">🏨</div><div class="sp-name">OYO Hotels</div></div><div class="sponsor-item"><div class="sp-icon">🌸</div><div class="sp-name">Kama Ayurveda</div></div></div></div>
-    <div class="become-sponsor"><span class="s-eyebrow" style="display:block;margin-bottom:10px;">Become a Sponsor</span><h3>Align with <em style="font-style:italic;color:var(--saffron);">Wellness &amp; Purpose</em></h3><p>Reach 50,000+ wellness-conscious participants across India. Multiple tiers available from ₹1L to ₹50L.</p><a href="#contact" class="btn-primary">DOWNLOAD SPONSOR KIT</a></div>
-  </div>
+    <!-- <div class="become-sponsor"><span class="s-eyebrow" style="display:block;margin-bottom:10px;">Become a Sponsor</span><h3>Align with <em style="font-style:italic;color:var(--saffron);">Wellness &amp; Purpose</em></h3><p>Reach 50,000+ wellness-conscious participants across India.
+  </div> -->
 </section>
 
 <!-- CTA -->
 <div class="cta-banner" id="register">
   <h2>Be Part of History.<br><em style="font-style:italic;color:var(--saffron);">Join Us on June 21.</em></h2>
-  <p>Free registration for the grand public event. Limited spots for premium workshops with master teachers.</p>
+  <p>Registration for the grand public event.</p>
   <div class="cta-btns">
-    <a href="/register" class="btn-primary" target="_top" rel="noopener noreferrer">REGISTER FREE NOW</a>
+    <a href="/register" class="btn-primary" target="_top" rel="noopener noreferrer">REGISTER</a>
     <a href="/register" class="btn-outline" target="_top" rel="noopener noreferrer">CORPORATE INQUIRY</a>
   </div>
 </div>
