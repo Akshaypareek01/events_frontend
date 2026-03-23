@@ -46,37 +46,16 @@ nav{
 /* HERO */
 .hero{
   padding-top:52px;
-  min-height:auto;
+  margin:0;
   background:var(--warm);
-  position:relative;overflow:hidden;
+  position:relative;
 }
-.hero-left{
-  display:flex;flex-direction:column;justify-content:flex-start;
-  padding:16px 24px 24px;
-  max-width:920px;
-  margin:0 auto;
-}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:12px;
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--saffron);margin-bottom:12px;
-}
-.eyebrow-line{width:28px;height:1px;background:var(--saffron);}
-.hero h1{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(50px,5.5vw,80px);font-weight:400;line-height:1.08;
-  color:var(--text);margin-bottom:10px;
-}
-.hero h1 em{font-style:italic;color:var(--saffron);}
-.hero-date{font-family:'Cinzel',serif;font-size:12px;letter-spacing:5px;color:var(--text-lt);margin-bottom:12px;}
-.hero-sub{font-size:16px;line-height:1.9;color:var(--text-mid);max-width:420px;margin-bottom:18px;font-weight:300;}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-banner-link{display:block;line-height:0;text-decoration:none;}
+.hero-banner-full{width:100%;height:auto;display:block;object-fit:contain;}
 .btn-primary{background:var(--saffron);color:#fff;padding:16px 36px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;text-decoration:none;display:inline-block;transition:.3s;}
 .btn-primary:hover{background:var(--saffron-dk);transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,84,26,.3);}
 .btn-outline{background:transparent;color:var(--saffron);padding:16px 36px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;border:1.5px solid var(--saffron);border-radius:2px;cursor:pointer;text-decoration:none;display:inline-block;transition:.3s;}
 .btn-outline:hover{background:rgba(232,84,26,.05);transform:translateY(-2px);}
-.hero-stats{display:flex;gap:36px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
-.stat-num{font-family:'Playfair Display',serif;font-size:34px;font-weight:500;color:var(--saffron);line-height:1;}
-.stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lt);margin-top:5px;}
 
 /* SCROLL TICKER */
 .scroll-track-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--white);}
@@ -193,8 +172,6 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
   nav{padding:10px 20px;}
   .nav-links{display:none;}
   .hamburger{display:flex;}
-  .hero-left{padding:14px 20px 20px;align-items:center;text-align:center;}
-  .hero-sub{margin:0 auto 18px;}
   .about-grid,.testi-grid{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr 1fr;gap:32px;}
   .section{padding:68px 24px;}
@@ -203,7 +180,6 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
 }
 @media(max-width:600px){
   .footer-grid{grid-template-columns:1fr;}
-  .hero-stats{flex-wrap:wrap;justify-content:center;gap:20px;}
   .testi-grid{grid-template-columns:1fr;}
 }
 
@@ -239,22 +215,9 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-left">
-    <div class="eyebrow reveal d1"><span class="eyebrow-line"></span>JUNE 21, 2026<span class="eyebrow-line"></span></div>
-    <h1 class="reveal d2">International<br><em>Yoga Day</em><br>2026</h1>
-    <div class="hero-date reveal d2">PRESENTED BY SAMSARA WELLNESS</div>
-    <p class="hero-sub reveal d3">Unite mind, body and spirit. Join thousands of practitioners across India and the globe — a grand celebration sanctioned by the Ministry of Ayush, Government of India.</p>
-    <div class="hero-btns reveal d3">
-      <a href="/register" target="_top" rel="noopener noreferrer" class="btn-primary">REGISTER FREE</a>
-      <a href="#about" class="btn-outline">EXPLORE</a>
-    </div>
-    <div class="hero-stats reveal d3">
-      <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Participants</div></div>
-      <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Teachers</div></div>
-      <div class="stat"><div class="stat-num">12</div><div class="stat-label">Venues</div></div>
-      <div class="stat"><div class="stat-num">180+</div><div class="stat-label">Countries</div></div>
-    </div>
-  </div>
+  <a href="/register" class="hero-banner-link" target="_top" rel="noopener noreferrer">
+    <img src="/yoga%20mahotsav.png" alt="International Yoga Day 2026 — Yoga Mahotsav" class="hero-banner-full" />
+  </a>
 </section>
 
 <!-- SCROLLING TICKER -->
