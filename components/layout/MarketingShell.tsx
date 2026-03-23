@@ -2,7 +2,16 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { MarketingAuthLinks } from "@/components/layout/MarketingAuthLinks";
 
-export function MarketingShell({ children }: { children: ReactNode }) {
+type MarketingShellProps = {
+  children: ReactNode;
+  /** Landing-only anchors; hide on auth routes where they don’t apply. */
+  showSchedulePricing?: boolean;
+};
+
+export function MarketingShell({
+  children,
+  showSchedulePricing = true,
+}: MarketingShellProps) {
   return (
     <div className="flex min-h-full flex-col bg-[var(--color-bg)] text-[var(--color-text)]">
       <header className="border-b border-[var(--color-border)] bg-[var(--color-surface)]/80 backdrop-blur-md">
@@ -11,12 +20,16 @@ export function MarketingShell({ children }: { children: ReactNode }) {
             Samsara Yoga
           </Link>
           <nav className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:justify-end">
-            <a href="#schedule" className="text-[var(--color-muted)] hover:text-[var(--color-text)]">
-              Schedule
-            </a>
-            <a href="#pricing" className="text-[var(--color-muted)] hover:text-[var(--color-text)]">
-              Pricing
-            </a>
+            {showSchedulePricing && (
+              <>
+                <a href="#schedule" className="text-[var(--color-muted)] hover:text-[var(--color-text)]">
+                  Schedule
+                </a>
+                <a href="#pricing" className="text-[var(--color-muted)] hover:text-[var(--color-text)]">
+                  Pricing
+                </a>
+              </>
+            )}
             <MarketingAuthLinks />
           </nav>
         </div>

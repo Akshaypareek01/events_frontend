@@ -159,7 +159,7 @@ export function LoginForm() {
         : "Resend code";
 
   return (
-    <MarketingShell>
+    <MarketingShell showSchedulePricing={false}>
       <div className="mx-auto max-w-md px-4 py-16">
         <h1 className="font-[family-name:var(--font-display)] text-3xl">Login</h1>
         <p className="mt-2 text-sm text-[var(--color-muted)]">
