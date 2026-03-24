@@ -80,14 +80,10 @@ nav{
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1160px;margin:0 auto;}
 .about-txt p{font-size:16px;line-height:1.9;color:var(--text-mid);margin-bottom:18px;font-weight:300;}
 .about-visual{
-  background:linear-gradient(155deg,#f9efe3 0%,#f0dfc9 100%);
-  border-radius:8px;padding:50px 44px;text-align:center;
-  border:1px solid var(--border);position:relative;overflow:hidden;
+  border-radius:8px;padding:0;
+  border:1px solid var(--border);position:relative;overflow:hidden;line-height:0;
 }
-.about-big{font-family:'Playfair Display',serif;font-size:76px;}
-.about-theme{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--saffron);margin-top:14px;}
-.about-year{font-family:'Cinzel',serif;font-size:56px;font-weight:600;color:rgba(232,84,26,.07);line-height:1;}
-.about-pill{display:inline-block;margin-top:14px;padding:8px 18px;background:rgba(232,84,26,.1);color:var(--saffron);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;border-radius:2px;}
+.about-visual img{width:100%;height:auto;display:block;}
 
 /* CAROUSELS */
 .carousel-outer{overflow:hidden;}
@@ -262,10 +258,11 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
       <a href="/register" target="_top" rel="noopener noreferrer" class="btn-primary" style="margin-top:20px;display:inline-block;">JOIN THE CELEBRATION</a>
     </div>
     <div class="about-visual">
-      <div class="about-big">🪷</div>
-      <div class="about-theme">"Yoga for One Earth,<br>One Health"</div>
-      <div class="about-year">2026</div>
-      <div class="about-pill">UN Resolution 69/131 · Est. 2015</div>
+      <img
+        src="/Yoga%20for%20Earth%20and%20Health.png"
+        alt="Yoga for One Earth, One Health — 2026"
+        loading="lazy"
+      />
     </div>
   </div>
 </section>
