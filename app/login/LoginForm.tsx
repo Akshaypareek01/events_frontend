@@ -44,6 +44,12 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* Right panel (60%) */}
       <div className="relative flex w-full flex-col overflow-hidden bg-white lg:w-3/5">
 
+
+{/*BACK BUTTON*/}
+<a href="/" className="absolute top-4 right-4 z-20 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-orange-500 transition-colors">
+  Back
+</a>
+
         {/* Scrollable inner */}
         <div className="flex flex-1 flex-col overflow-y-auto px-8 py-8">
 
