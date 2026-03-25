@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { LoginSplitLayout } from "@/components/auth/LoginSplitLayout";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
 import { setUserToken } from "@/lib/auth";
@@ -19,70 +20,6 @@ type OtpErrJson = {
     payToken?: string;
   };
 };
-
-/* ── Left decorative panel ── */
-function LeftPanel() {
-  return (
-    <div className="relative hidden w-2/5 shrink-0 overflow-hidden lg:block">
-      <Image
-        src="/yogamahotsavlogin.png"
-        alt="International Yoga Day"
-        fill
-        className="object-cover object-center"
-        priority
-      />
-    </div>
-  );
-}
-
-/* ── Shared layout wrapper ── */
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex h-screen overflow-hidden">
-      <LeftPanel />
-
-      {/* Right panel (60%) */}
-      <div className="relative flex w-full flex-col overflow-hidden bg-white lg:w-3/5">
-
-
-{/*BACK BUTTON*/}
-<a href="/" className="absolute top-4 right-4 z-20 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-orange-500 transition-colors">
-  Back
-</a>
-
-        {/* Scrollable inner */}
-        <div className="flex flex-1 flex-col overflow-y-auto px-8 py-8">
-
-          {/* Samsara logo — just the image, no wordmark */}
-          <div className="flex justify-center">
-            <Image
-              src="/samsaralogomain.png"
-              alt="Samsara"
-              width={120}
-              height={120}
-              className="h-12 w-auto object-contain"
-            />
-          </div>
-
-          {/* Centered content */}
-          <div className="flex flex-1 flex-col items-center justify-center py-6">
-            <div className="w-full max-w-[500px]">
-              {children}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <p className="pt-4 text-center text-xs text-gray-400">
-            Copyright© 2025 Samsaraa WellTek Pvt Ltd. All rights reserved.
-            <br />
-            Powered by Samsaraa WellTek Pvt Ltd
-          </p>
-
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function LoginForm() {
   const router = useRouter();
@@ -263,7 +200,7 @@ export function LoginForm() {
   /* ── Email step ── */
   if (step === "email") {
     return (
-      <Layout>
+      <LoginSplitLayout>
         <h1 className="mb-1 text-center text-3xl font-bold text-gray-900">Email Verification</h1>
         <p className="mb-6 text-center text-sm text-gray-500">Verify your email address to continue</p>
 
@@ -324,13 +261,20 @@ export function LoginForm() {
             </button>
           </div>
         </form>
-      </Layout>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Teacher (username & password)?{" "}
+          <Link href="/teacher/login" className="font-semibold text-orange-500 hover:text-orange-600">
+            Teacher login
+          </Link>
+        </p>
+      </LoginSplitLayout>
     );
   }
 
   /* ── OTP step ── */
   return (
-    <Layout>
+    <LoginSplitLayout>
       <h1 className="mb-1 text-center text-3xl font-bold text-gray-900">Email Verification</h1>
       <p className="mb-6 text-center text-sm text-gray-500">Verify your email address to continue</p>
 
@@ -431,6 +375,6 @@ export function LoginForm() {
           </button>
         </p>
       )}
-    </Layout>
+    </LoginSplitLayout>
   );
 }

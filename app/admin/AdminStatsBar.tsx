@@ -27,9 +27,14 @@ function StatCard({
   sub?: string;
 }) {
   return (
-    <Card className="border-[var(--color-border)] p-4 shadow-[var(--shadow-soft)]">
-      <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-muted)]">{label}</p>
-      <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[var(--color-text)]">{value}</p>
+    <Card className="border-[var(--color-border)] bg-white p-4 shadow-[var(--shadow-soft)]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#9A7A60]">{label}</p>
+      <p
+        className="mt-1 text-2xl text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-iyd-display), ui-serif, Georgia, serif" }}
+      >
+        {value}
+      </p>
       {sub && <p className="mt-0.5 text-xs text-[var(--color-muted)]">{sub}</p>}
     </Card>
   );

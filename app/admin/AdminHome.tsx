@@ -11,10 +11,18 @@ import { AdminStatsBar } from "./AdminStatsBar";
 import { AdminPaymentsPanel } from "./AdminPaymentsPanel";
 import { AdminRemindersPanel } from "./AdminRemindersPanel";
 import { AdminUsersPanel } from "./AdminUsersPanel";
+import { AdminTeachersPanel } from "./AdminTeachersPanel";
 import { cn } from "@/lib/cn";
 import { getAdminToken } from "@/lib/auth";
 
-type TabId = "users" | "corporate" | "payments" | "domains" | "classes" | "reminders";
+type TabId =
+  | "users"
+  | "corporate"
+  | "payments"
+  | "domains"
+  | "classes"
+  | "reminders"
+  | "teachers";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "users", label: "Users" },
@@ -22,6 +30,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: "payments", label: "Payments" },
   { id: "domains", label: "Corporate domains" },
   { id: "classes", label: "Class links" },
+  { id: "teachers", label: "Teachers" },
   { id: "reminders", label: "Reminders" },
 ];
 
@@ -52,37 +61,43 @@ export function AdminHome() {
     <AdminShell headerRight={<AdminLogoutButton />}>
       <AdminStatsBar />
 
-      <div className="mt-8 border-b border-[var(--color-border)]">
-        <div className="-mx-4 overflow-x-auto overscroll-x-contain px-4 pb-px [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
+      <div className="mt-8 rounded-t-lg border border-b-0 border-[var(--color-border)] bg-white/80">
+        <div className="-mx-4 overflow-x-auto overscroll-x-contain px-2 pb-px pt-1 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-2 [&::-webkit-scrollbar]:hidden">
           <nav
-            className="flex w-max min-w-full flex-nowrap gap-1 sm:w-auto sm:flex-wrap"
+            className="flex w-max min-w-full flex-nowrap gap-0.5 sm:w-auto sm:flex-wrap"
             aria-label="Admin sections"
           >
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setTab(t.id)}
-              className={cn(
-                "relative shrink-0 rounded-t-lg px-3 py-2.5 text-sm font-medium transition-colors sm:px-4",
-                tab === t.id
-                  ? "bg-[var(--color-surface)] text-[var(--color-text)] shadow-[inset_0_-2px_0_0_var(--color-primary)]"
-                  : "text-[var(--color-muted)] hover:bg-[var(--color-surface-muted)]/60 hover:text-[var(--color-text)]",
-              )}
-            >
-              {t.label}
-            </button>
-          ))}
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={cn(
+                  "relative shrink-0 rounded-t-md px-3 py-2.5 text-[12px] font-medium transition-colors sm:px-4",
+                  tab === t.id
+                    ? "bg-white text-[#1C1208] shadow-[inset_0_-2px_0_0_#E8541A]"
+                    : "text-[#5A3C22] hover:bg-[#FDF6EE] hover:text-[#1C1208]",
+                )}
+                style={
+                  tab === t.id
+                    ? { fontFamily: "var(--font-iyd-accent), ui-serif, Georgia, serif" }
+                    : undefined
+                }
+              >
+                {t.label}
+              </button>
+            ))}
           </nav>
         </div>
       </div>
 
-      <section className="mt-6">
+      <section className="mt-0 rounded-b-lg border border-t-0 border-[var(--color-border)] bg-white/95 px-4 py-6 sm:px-6 sm:py-8">
         {tab === "users" && <AdminUsersPanel mode="all" />}
         {tab === "corporate" && <AdminUsersPanel mode="corporate" />}
         {tab === "payments" && <AdminPaymentsPanel />}
         {tab === "domains" && <AdminProgramPanel />}
         {tab === "classes" && <AdminClassLinksPanel />}
+        {tab === "teachers" && <AdminTeachersPanel />}
         {tab === "reminders" && <AdminRemindersPanel />}
       </section>
     </AdminShell>

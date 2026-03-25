@@ -3,12 +3,98 @@
 import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
-import { MarketingShell } from "@/components/layout/MarketingShell";
 import { getApiBaseUrl } from "@/lib/api";
 import { getUserToken } from "@/lib/auth";
+
+/** IYD landing tokens — same as `public/samsara-iyd-landing.html` */
+const iy = {
+  border: "rgba(232,84,26,0.14)",
+} as const;
+
+function BackChevronIcon() {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+  );
+}
+
+/** Top-left back; main area padded so centered copy doesn’t collide with the control. */
+function PaySurface({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const goBack = useCallback(() => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+      return;
+    }
+    router.push("/");
+  }, [router]);
+
+  return (
+    <div className="relative flex min-h-dvh flex-col bg-[#FDF6EE] text-[#1C1208]">
+      <button
+        type="button"
+        onClick={goBack}
+        className="absolute left-3 top-[max(1rem,env(safe-area-inset-top))] z-20 inline-flex items-center gap-2 rounded-sm border border-transparent px-2 py-2 text-[#5A3C22] transition hover:border-[rgba(232,84,26,0.2)] hover:bg-white/70 sm:left-5 sm:top-5"
+        style={{ fontFamily: "var(--font-iyd-accent), ui-serif, Georgia, serif" }}
+        aria-label="Go back"
+      >
+        <BackChevronIcon />
+        <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">Back</span>
+      </button>
+      <main className="flex w-full flex-1 flex-col items-center justify-center px-4 pb-10 pt-[4.25rem] sm:pb-14 sm:pt-[4.5rem]">
+        {children}
+      </main>
+    </div>
+  );
+}
+
+/** Centered column; card innards use flex to center the CTA. */
+function IydCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div
+      className={`flex w-full max-w-lg flex-col items-center rounded-lg border bg-white p-6 text-center shadow-[0_18px_50px_rgba(28,18,8,0.06)] sm:p-8 ${className}`}
+      style={{ borderColor: iy.border }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function IydPrimaryButton({
+  children,
+  disabled,
+  onClick,
+  className = "",
+}: {
+  children: React.ReactNode;
+  disabled?: boolean;
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex min-h-11 min-w-[220px] touch-manipulation items-center justify-center gap-2 rounded-sm bg-[#E8541A] px-9 py-4 text-[12px] font-bold uppercase tracking-[1.5px] text-white transition hover:bg-[#C2400D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8541A]/50 disabled:pointer-events-none disabled:opacity-50 ${className}`}
+      style={{ fontFamily: "var(--font-iyd-accent), ui-serif, Georgia, serif" }}
+    >
+      {children}
+    </button>
+  );
+}
 
 export function PayClient() {
   const router = useRouter();
@@ -90,7 +176,7 @@ export function PayClient() {
         name: "Samsara Yoga",
         description: "Program fee",
         order_id: orderData.orderId,
-        theme: { color: "#2f5d50" },
+        theme: { color: "#E8541A" },
         handler: async (response) => {
           const verifyRes = await fetch(`${getApiBaseUrl()}/api/v1/payments/verify`, {
             method: "POST",
@@ -118,35 +204,35 @@ export function PayClient() {
 
   if (!userId) {
     return (
-      <MarketingShell>
-        <div className="mx-auto max-w-lg px-4 py-16">
-          <Card>
-            <p className="text-[var(--color-muted)]">Missing user. Start from registration.</p>
-            <Button className="mt-4" onClick={() => router.push("/register")}>
-              Register
-            </Button>
-          </Card>
+      <PaySurface>
+        <div className="w-full max-w-lg text-balance text-center">
+          <IydCard className="gap-4">
+            <p className="max-w-md text-[15px] font-light leading-relaxed text-[#5A3C22]">
+              Missing user. Start from registration.
+            </p>
+            <IydPrimaryButton onClick={() => router.push("/register")}>Register</IydPrimaryButton>
+          </IydCard>
         </div>
-      </MarketingShell>
+      </PaySurface>
     );
   }
 
   if (!keyId) {
     return (
-      <MarketingShell>
-        <div className="mx-auto max-w-lg px-4 py-16">
-          <Card>
-            <p className="text-[var(--color-danger)]">
+      <PaySurface>
+        <div className="w-full max-w-lg text-balance text-center">
+          <IydCard>
+            <p className="max-w-md text-[15px] font-light leading-relaxed text-[#C2400D]">
               NEXT_PUBLIC_RAZORPAY_KEY_ID is not set in the frontend environment.
             </p>
-          </Card>
+          </IydCard>
         </div>
-      </MarketingShell>
+      </PaySurface>
     );
   }
 
   return (
-    <MarketingShell>
+    <PaySurface>
       <Script
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
@@ -154,30 +240,38 @@ export function PayClient() {
         onLoad={() => setScriptReady(true)}
         onReady={() => setScriptReady(true)}
       />
-      <div className="mx-auto max-w-lg px-4 py-16">
-        <h1 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-text)]">
+      <div className="w-full max-w-lg text-balance text-center">
+        <p className="text-[10px] font-normal uppercase tracking-[4px] text-[#E8541A]">Checkout</p>
+        <h1
+          className="mt-3 text-[clamp(1.75rem,4vw,2.25rem)] font-normal leading-tight text-[#1C1208]"
+          style={{ fontFamily: "var(--font-iyd-display), ui-serif, Georgia, serif" }}
+        >
           Complete payment
         </h1>
-        <p className="mt-2 text-[var(--color-muted)]">Secured by Razorpay · ₹499 program fee</p>
-        <Card className="mt-8 space-y-4">
+        <p className="mx-auto mt-3 max-w-md text-[15px] font-light leading-relaxed text-[#5A3C22]">
+          Secured by Razorpay · ₹499 program fee
+        </p>
+        <IydCard className="mt-8 gap-4">
           {err && (
-            <p className="rounded-lg border border-[var(--color-danger)]/40 bg-[var(--color-danger)]/10 px-3 py-2 text-sm text-[var(--color-danger)]">
+            <p className="w-full max-w-md break-words rounded-lg border border-[#C2400D]/35 bg-[#E8541A]/10 px-3 py-2 text-sm text-[#8B2E0E]">
               {err}
             </p>
           )}
-          <Button type="button" disabled={!scriptReady || busy} onClick={() => void pay()}>
+          <IydPrimaryButton disabled={!scriptReady || busy} onClick={() => void pay()}>
             {busy ? (
               <span className="inline-flex items-center gap-2">
-                <Spinner className="size-4" />
+                <Spinner className="size-4 border-white/35 border-t-white" />
                 Working…
               </span>
             ) : (
               "Pay with Razorpay"
             )}
-          </Button>
-          {!scriptReady && <p className="text-sm text-[var(--color-muted)]">Loading checkout…</p>}
-        </Card>
+          </IydPrimaryButton>
+          {!scriptReady && (
+            <p className="text-sm font-light text-[#9A7A60]">Loading checkout…</p>
+          )}
+        </IydCard>
       </div>
-    </MarketingShell>
+    </PaySurface>
   );
 }

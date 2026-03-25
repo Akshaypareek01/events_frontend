@@ -27,6 +27,24 @@ body {
   color: var(--color-text);
 }
 
+/**
+ * IYD / saffron palette for `/admin` dashboard (wrapped by `app/admin/layout.tsx`).
+ * Reuses `--color-*` tokens so Cards, Buttons, and panels pick up the theme without per-file edits.
+ */
+.admin-iyd {
+  --color-bg: #fdf6ee;
+  --color-surface: #ffffff;
+  --color-surface-muted: #faf3eb;
+  --color-text: #1c1208;
+  --color-muted: #5a3c22;
+  --color-primary: #e8541a;
+  --color-primary-fg: #ffffff;
+  --color-accent: #e8541a;
+  --color-border: rgba(232, 84, 26, 0.14);
+  --color-ring: rgba(232, 84, 26, 0.35);
+  --shadow-soft: 0 18px 50px rgba(28, 18, 8, 0.08);
+}
+
 /* Reduce tap delay on interactive elements (mobile). */
 @media (hover: none) {
   button,

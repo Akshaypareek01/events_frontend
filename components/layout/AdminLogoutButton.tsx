@@ -11,7 +11,7 @@ export function AdminLogoutButton() {
     <Button
       variant="ghost"
       type="button"
-      className="text-sm"
+      className="rounded-sm border border-[rgba(232,84,26,0.25)] bg-transparent text-[11px] font-semibold uppercase tracking-[0.12em] text-[#E8541A] hover:bg-[#E8541A]/10 hover:text-[#C2400D]"
       onClick={() => {
         clearAdminToken();
         router.push("/admin/login");
