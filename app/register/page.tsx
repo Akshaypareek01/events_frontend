@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MarketingShell } from "@/components/layout/MarketingShell";
+// import { MarketingShell } from "@/components/layout/MarketingShell";
 import { RegisterForm } from "./RegisterForm";
 
 export default function RegisterPage() {
   return (
-    <MarketingShell>
+    // <MarketingShell>
       <div className="flex h-screen overflow-hidden">
 
         {/* ── LEFT PANEL (40%) ── */}
@@ -51,6 +51,20 @@ export default function RegisterPage() {
 
           {/* Scrollable form area */}
           <div className="relative z-10 flex w-full flex-col items-center overflow-y-auto px-8 py-8">
+
+ {/* ── Back button ── */}
+  <div className="w-full max-w-[500px]">
+    <Link
+      href="/"
+      className="absolute top-4 right-4 z-20 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-orange-500 transition-colors"
+    >
+      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+      </svg>
+      Back
+    </Link>
+  </div>
+
             <div className="w-full max-w-[500px]">
 
               {/* ── Header logos ── */}
@@ -121,6 +135,6 @@ export default function RegisterPage() {
         </div>
 
       </div>
-    </MarketingShell>
+    // </MarketingShell> 
   );
 }
