@@ -1,12 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Button } from "@/components/ui/Button";
-import { FieldError } from "@/components/ui/FieldError";
-import { Input } from "@/components/ui/Input";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { Spinner } from "@/components/ui/Spinner";
-import { MarketingShell } from "@/components/layout/MarketingShell";
 import { getApiBaseUrl } from "@/lib/api";
 import { setUserToken } from "@/lib/auth";
 
@@ -23,19 +20,78 @@ type OtpErrJson = {
   };
 };
 
+/* ── Left decorative panel ── */
+function LeftPanel() {
+  return (
+    <div className="relative hidden w-2/5 shrink-0 overflow-hidden lg:block">
+      <Image
+        src="/yogamahotsavlogin.png"
+        alt="International Yoga Day"
+        fill
+        className="object-cover object-center"
+        priority
+      />
+    </div>
+  );
+}
+
+/* ── Shared layout wrapper ── */
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-screen overflow-hidden">
+      <LeftPanel />
+
+      {/* Right panel (60%) */}
+      <div className="relative flex w-full flex-col overflow-hidden bg-white lg:w-3/5">
+
+        {/* Scrollable inner */}
+        <div className="flex flex-1 flex-col overflow-y-auto px-8 py-8">
+
+          {/* Samsara logo — just the image, no wordmark */}
+          <div className="flex justify-center">
+            <Image
+              src="/samsaralogomain.png"
+              alt="Samsara"
+              width={120}
+              height={120}
+              className="h-12 w-auto object-contain"
+            />
+          </div>
+
+          {/* Centered content */}
+          <div className="flex flex-1 flex-col items-center justify-center py-6">
+            <div className="w-full max-w-[500px]">
+              {children}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <p className="pt-4 text-center text-xs text-gray-400">
+            Copyright© 2025 Samsaraa WellTek Pvt Ltd. All rights reserved.
+            <br />
+            Powered by Samsaraa WellTek Pvt Ltd
+          </p>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [step, setStep] = useState<"email" | "otp">("email");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [serverRetrySec, setServerRetrySec] = useState<number | null>(null);
-  /** Successful sends this session (info only; server enforces hard cap). */
   const [sendCount, setSendCount] = useState(0);
-  /** Set when API says user must pay before OTP; links to `/pay` with token. */
   const [payHref, setPayHref] = useState<string | null>(null);
+
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -56,12 +112,11 @@ export function LoginForm() {
     return () => window.clearInterval(t);
   }, [serverRetrySec]);
 
-  useEffect(() => {
-    setPayHref(null);
-  }, [email]);
+  useEffect(() => { setPayHref(null); }, [email]);
 
   const requestOtp = useCallback(async () => {
     setErr(null);
+    setSuccessMsg(null);
     setPayHref(null);
     setBusy(true);
     try {
@@ -92,12 +147,13 @@ export function LoginForm() {
         setErr(data.message ?? "Could not send code");
         return false;
       }
-
       setSendCount((c) => c + 1);
       setResendCooldown(COOLDOWN_SEC);
       setServerRetrySec(null);
       setPayHref(null);
+      setSuccessMsg(`We sent a 6-digit code to ${email}`);
       setStep("otp");
+      setTimeout(() => otpRefs.current[0]?.focus(), 100);
       return true;
     } catch {
       setErr("Network error");
@@ -114,6 +170,7 @@ export function LoginForm() {
 
   async function onResend() {
     if (busy || resendCooldown > 0 || serverRetrySec !== null) return;
+    setOtp(["", "", "", "", "", ""]);
     await requestOtp();
   }
 
@@ -122,10 +179,11 @@ export function LoginForm() {
     setErr(null);
     setBusy(true);
     try {
+      const code = otp.join("");
       const res = await fetch(`${getApiBaseUrl()}/api/v1/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
+        body: JSON.stringify({ email, otp: code }),
       });
       const data = (await res.json()) as { token?: string; message?: string };
       if (!res.ok || !data.token) {
@@ -143,128 +201,230 @@ export function LoginForm() {
 
   function goBackToEmail() {
     setStep("email");
-    setOtp("");
+    setOtp(["", "", "", "", "", ""]);
     setErr(null);
+    setSuccessMsg(null);
     setResendCooldown(0);
     setServerRetrySec(null);
     setPayHref(null);
   }
 
-  const resendDisabled = busy || resendCooldown > 0 || serverRetrySec !== null;
-  const resendLabel =
-    resendCooldown > 0
-      ? `Resend code (${resendCooldown}s)`
-      : serverRetrySec !== null
-        ? `Try again in ${serverRetrySec}s`
-        : "Resend code";
+  function handleOtpChange(index: number, value: string) {
+    const digit = value.replace(/\D/g, "").slice(-1);
+    const next = [...otp];
+    next[index] = digit;
+    setOtp(next);
+    if (digit && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  }
 
-  return (
-    <MarketingShell showSchedulePricing={false}>
-      <div className="mx-auto max-w-md px-4 py-16">
-        <h1 className="font-[family-name:var(--font-display)] text-3xl">Login</h1>
-        <p className="mt-2 text-sm text-[var(--color-muted)]">
-          Email OTP — use the same email you registered with (after payment / corporate approval). Up to 3
-          codes per hour; wait 60s between sends.
-        </p>
-        {step === "email" ? (
-          <form onSubmit={onSubmitEmail} className="mt-8 space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
+  function handleOtpKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
+  }
+
+  function handleOtpPaste(e: React.ClipboardEvent) {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setOtp(pasted.split(""));
+      otpRefs.current[5]?.focus();
+    }
+  }
+
+  const resendDisabled = busy || resendCooldown > 0 || serverRetrySec !== null;
+
+  const inputClass =
+    "w-full rounded-full border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-100";
+
+  /* ── Info box ── */
+  const InfoBox = () => (
+    <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+      <p className="mb-0.5 flex items-center gap-1.5 text-sm font-semibold text-blue-700">
+        <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+        </svg>
+        Login Return Status
+      </p>
+      <p className="text-xs text-blue-600 leading-relaxed">
+        Email OTP - Use the same email you registered with (after payment/corporate approval).
+        Up to 3 codes, wait 60 seconds between sends.
+      </p>
+    </div>
+  );
+
+  /* ── Email step ── */
+  if (step === "email") {
+    return (
+      <Layout>
+        <h1 className="mb-1 text-center text-3xl font-bold text-gray-900">Email Verification</h1>
+        <p className="mb-6 text-center text-sm text-gray-500">Verify your email address to continue</p>
+
+        <InfoBox />
+
+        <form onSubmit={onSubmitEmail}>
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-md space-y-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                Email Address <span className="text-orange-500">*</span>
               </label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="mt-1"
-              />
+              <div className="relative">
+                <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-gray-400">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </span>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  placeholder="Enter Email ID"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className={`${inputClass} pl-10`}
+                />
+              </div>
             </div>
 
             {err && (
-              <div className="space-y-4">
-                <FieldError>{err}</FieldError>
-                {payHref && (
-                  <Button
-                    type="button"
-                    className="w-full"
-                    onClick={() => router.push(payHref)}
-                  >
-                    Pay now
-                  </Button>
-                )}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-3">
-              <Button
-                type="submit"
-                className="w-full sm:w-auto"
-                disabled={busy || Boolean(payHref)}
-                title={
-                  payHref ? "Complete payment first, then request a login code" : undefined
-                }
-              >
-                {busy ? <Spinner className="size-4" /> : "Send code"}
-              </Button>
-            </div>
-          </form>
-        ) : (
-          <form onSubmit={verifyOtp} className="mt-8 space-y-4">
-            <p className="text-sm text-[var(--color-muted)]">
-              We sent a 6-digit code to <strong className="text-[var(--color-text)]">{email}</strong>.
-            </p>
-            <div>
-              <label htmlFor="otp" className="text-sm font-medium">
-                6-digit code
-              </label>
-              <Input
-                id="otp"
-                inputMode="numeric"
-                maxLength={6}
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                required
-                className="mt-1"
-              />
-            </div>
-            {err && <FieldError>{err}</FieldError>}
-            {sendCount >= 3 && (
-              <p className="text-sm text-[var(--color-muted)]">
-                You&apos;ve requested several codes. If emails are delayed, wait for the cooldown or try
-                again after the time shown above. Need a fresh start?{" "}
-                <button
-                  type="button"
-                  className="font-medium text-[var(--color-primary)] underline"
-                  onClick={goBackToEmail}
-                >
-                  Change email
-                </button>
-                .
+              <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                {err}
               </p>
             )}
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Button type="submit" disabled={busy}>
-                {busy ? <Spinner className="size-4" /> : "Verify"}
-              </Button>
-              <Button type="button" variant="secondary" onClick={goBackToEmail}>
-                Back
-              </Button>
-              <Button
+
+            {payHref && (
+              <button
                 type="button"
-                variant="ghost"
-                disabled={resendDisabled}
-                onClick={() => void onResend()}
-                className="sm:ml-auto"
+                onClick={() => router.push(payHref)}
+                className="w-full rounded-full bg-orange-500 py-3 text-sm font-semibold text-white hover:bg-orange-600"
               >
-                {resendLabel}
-              </Button>
+                Pay now
+              </button>
+            )}
+
+            <button
+              type="submit"
+              disabled={busy || Boolean(payHref)}
+              className="w-full rounded-full bg-orange-500 py-3.5 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
+            >
+              {busy ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <Spinner className="size-4 border-t-white" /> Sending…
+                </span>
+              ) : (
+                "Send Code"
+              )}
+            </button>
+          </div>
+        </form>
+      </Layout>
+    );
+  }
+
+  /* ── OTP step ── */
+  return (
+    <Layout>
+      <h1 className="mb-1 text-center text-3xl font-bold text-gray-900">Email Verification</h1>
+      <p className="mb-6 text-center text-sm text-gray-500">Verify your email address to continue</p>
+
+      <InfoBox />
+
+      {successMsg && (
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+          <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          We sent a 6-digit code to{" "}
+          <span className="font-semibold">{email}</span>
+        </div>
+      )}
+
+      <form onSubmit={verifyOtp}>
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-md space-y-5">
+          <div>
+            <p className="mb-3 text-center text-sm font-semibold text-gray-700">
+              Verification Code <span className="text-orange-500">*</span>
+            </p>
+            <div className="flex items-center justify-center gap-2" onPaste={handleOtpPaste}>
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  ref={(el) => { otpRefs.current[i] = el; }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(i, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                  className={`h-12 w-12 rounded-xl border text-center text-lg font-semibold outline-none transition
+                    ${digit
+                      ? "border-orange-400 bg-white text-gray-900 ring-2 ring-orange-100"
+                      : "border-gray-200 bg-gray-50 text-gray-900"
+                    } focus:border-orange-400 focus:ring-2 focus:ring-orange-100`}
+                />
+              ))}
             </div>
-          </form>
-        )}
+          </div>
+
+          {err && (
+            <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+              {err}
+            </p>
+          )}
+
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={busy || otp.join("").length < 6}
+              className="flex-1 rounded-full bg-orange-500 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
+            >
+              {busy ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <Spinner className="size-4 border-t-white" /> Verifying…
+                </span>
+              ) : (
+                "Verify"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={goBackToEmail}
+              className="flex-1 rounded-full border border-gray-200 bg-gray-50 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-100"
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div className="mt-4 flex items-center justify-between px-1 text-sm text-gray-500">
+        <span>Didn&apos;t receive the code?</span>
+        <span className="flex items-center gap-2">
+          {(resendCooldown > 0 || serverRetrySec !== null) && (
+            <span className="text-gray-400">
+              {resendCooldown > 0 ? `${resendCooldown}s` : `${serverRetrySec}s`}
+            </span>
+          )}
+          <button
+            type="button"
+            disabled={resendDisabled}
+            onClick={() => void onResend()}
+            className={`font-semibold transition ${resendDisabled ? "cursor-not-allowed text-gray-300" : "text-orange-500 hover:text-orange-600"}`}
+          >
+            Resend Code
+          </button>
+        </span>
       </div>
-    </MarketingShell>
+
+      {sendCount >= 3 && (
+        <p className="mt-3 text-center text-xs text-gray-400">
+          Need a fresh start?{" "}
+          <button type="button" onClick={goBackToEmail} className="text-orange-500 underline">
+            Change email
+          </button>
+        </p>
+      )}
+    </Layout>
   );
 }
