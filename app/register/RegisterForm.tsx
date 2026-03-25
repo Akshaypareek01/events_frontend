@@ -2,10 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
-import { Button } from "@/components/ui/Button";
 import { FieldError } from "@/components/ui/FieldError";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
 import { COUNTRY_OPTIONS } from "@/lib/countries";
@@ -20,6 +17,7 @@ export function RegisterForm() {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [userType, setUserType] = useState<UserType>("normal");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -98,43 +96,42 @@ export function RegisterForm() {
     }
   }
 
+  const inputClass =
+    "w-full rounded-full border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none transition focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-100";
+
+  const labelClass = "block mb-1.5 text-sm font-semibold text-gray-700";
+
   return (
     <form onSubmit={onSubmit} className="space-y-5">
-      <fieldset className="space-y-3">
-        <legend className="text-sm font-medium text-[var(--color-text)]">
-          User type <span className="text-[var(--color-danger)]">*</span>
-        </legend>
-        <div className="flex flex-col gap-2 sm:flex-row sm:gap-6">
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
-            <input
-              type="radio"
-              name="userType"
-              value="normal"
-              checked={userType === "normal"}
-              onChange={() => setUserType("normal")}
-              className="accent-[var(--color-primary)]"
-            />
-            Individual
-          </label>
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
-            <input
-              type="radio"
-              name="userType"
-              value="corporate"
-              checked={userType === "corporate"}
-              onChange={() => setUserType("corporate")}
-              className="accent-[var(--color-primary)]"
-            />
-            Corporate
-          </label>
-        </div>
-      </fieldset>
-
-      <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium text-[var(--color-text)]">
-          Full name <span className="text-[var(--color-danger)]">*</span>
+      {/* User Type */}
+      <div>
+        <label htmlFor="userType" className={labelClass}>
+          User Type <span className="text-orange-500">*</span>
         </label>
-        <Input
+        <div className="relative">
+          <select
+            id="userType"
+            value={userType}
+            onChange={(e) => setUserType(e.target.value as UserType)}
+            className={`${inputClass} appearance-none cursor-pointer pr-10`}
+          >
+            <option value="normal">Individual</option>
+            <option value="corporate">Corporate</option>
+          </select>
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      {/* Full Name */}
+      <div>
+        <label htmlFor="name" className={labelClass}>
+          Full Name <span className="text-orange-500">*</span>
+        </label>
+        <input
           id="name"
           name="name"
           autoComplete="name"
@@ -142,95 +139,144 @@ export function RegisterForm() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          className={inputClass}
         />
         <FieldError>{fieldErrors.name}</FieldError>
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-[var(--color-text)]">
-          {userType === "corporate" ? "Work email" : "Email"}{" "}
-          <span className="text-[var(--color-danger)]">*</span>
+      {/* Email */}
+      <div>
+        <label htmlFor="email" className={labelClass}>
+          {userType === "corporate" ? "Work Email" : "Email Address"}{" "}
+          <span className="text-orange-500">*</span>
         </label>
-        <Input
+        <input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
-          placeholder={userType === "corporate" ? "you@company.com" : undefined}
+          placeholder={userType === "corporate" ? "you@company.com" : "john.doe@example.com"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          className={inputClass}
         />
         <FieldError>{fieldErrors.email}</FieldError>
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="phone" className="text-sm font-medium text-[var(--color-text)]">
-          Mobile number <span className="text-[var(--color-danger)]">*</span>
+      {/* Mobile Number */}
+      <div>
+        <label htmlFor="phone" className={labelClass}>
+          Mobile Number <span className="text-orange-500">*</span>
         </label>
-        <Input
+        <input
           id="phone"
           name="phone"
           type="tel"
           inputMode="numeric"
           autoComplete="tel"
-          placeholder="10-digit mobile"
+          placeholder="+1 (555) 123-4567"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           required
+          className={inputClass}
         />
         <FieldError>{fieldErrors.phone}</FieldError>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <label htmlFor="city" className="text-sm font-medium text-[var(--color-text)]">
-            City <span className="text-[var(--color-danger)]">*</span>
-          </label>
-        <Input
+      {/* City */}
+      <div>
+        <label htmlFor="city" className={labelClass}>
+          City <span className="text-orange-500">*</span>
+        </label>
+        <input
           id="city"
           name="city"
           autoComplete="address-level2"
           minLength={2}
+          placeholder="Bangalore"
           value={city}
           onChange={(e) => setCity(e.target.value)}
           required
+          className={inputClass}
         />
-          <FieldError>{fieldErrors.city}</FieldError>
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="country" className="text-sm font-medium text-[var(--color-text)]">
-            Country <span className="text-[var(--color-danger)]">*</span>
-          </label>
-          <Select
+        <FieldError>{fieldErrors.city}</FieldError>
+      </div>
+
+      {/* Country */}
+      <div>
+        <label htmlFor="country" className={labelClass}>
+          Country <span className="text-orange-500">*</span>
+        </label>
+        <div className="relative">
+          <select
             id="country"
             name="country"
             required
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            options={countrySelectOptions}
-            placeholder="Select country"
-          />
-          <FieldError>{fieldErrors.country}</FieldError>
+            className={`${inputClass} appearance-none cursor-pointer pr-10`}
+          >
+            <option value="" disabled>
+              Select country
+            </option>
+            {countrySelectOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
         </div>
+        <FieldError>{fieldErrors.country}</FieldError>
+      </div>
+
+      {/* Terms & Conditions */}
+      <div className="flex items-start gap-3">
+        <input
+          id="terms"
+          type="checkbox"
+          checked={agreedToTerms}
+          onChange={(e) => setAgreedToTerms(e.target.checked)}
+          className="mt-0.5 h-4 w-4 cursor-pointer rounded border-gray-300 accent-orange-500"
+        />
+        <label htmlFor="terms" className="cursor-pointer text-sm text-gray-600">
+          I agree to the{" "}
+          <a href="#" className="text-orange-500 underline hover:text-orange-600">
+            Terms and Conditions
+          </a>{" "}
+          &amp;{" "}
+          <a href="#" className="text-orange-500 underline hover:text-orange-600">
+            Privacy Policy
+          </a>
+        </label>
       </div>
 
       {formError && (
-        <p className="rounded-lg border border-[var(--color-danger)]/40 bg-[var(--color-danger)]/10 px-3 py-2 text-sm text-[var(--color-danger)]">
+        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
           {formError}
         </p>
       )}
 
-      <Button type="submit" className="w-full sm:w-auto" disabled={submitting}>
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={submitting}
+        className="w-full rounded-full bg-orange-500 py-3.5 text-sm font-semibold text-white transition hover:bg-orange-600 active:bg-orange-700 disabled:opacity-60"
+      >
         {submitting ? (
-          <span className="inline-flex items-center gap-2">
-            <Spinner className="size-4 border-t-[var(--color-primary-fg)]" />
+          <span className="inline-flex items-center justify-center gap-2">
+            <Spinner className="size-4 border-t-white" />
             Submitting…
           </span>
         ) : (
-          "Submit registration"
+          "Submit"
         )}
-      </Button>
+      </button>
     </form>
   );
 }
