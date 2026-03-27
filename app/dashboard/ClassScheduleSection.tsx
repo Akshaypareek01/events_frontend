@@ -8,6 +8,67 @@ export type ClassRow = {
   zoomLink: string;
 };
 
+type BatchTimingRow = {
+  label: string;
+  time: string;
+};
+
+const DASHBOARD_BATCH_TIMINGS: BatchTimingRow[][] = [
+  [
+    { label: "India (IST)", time: "6:00 AM – 7:00 AM" },
+    { label: "Singapore (SGT)", time: "8:30 AM – 9:30 AM" },
+    { label: "Australia (AEDT)", time: "11:00 AM – 12:00 PM" },
+    { label: "USA (EST)", time: "8:30 PM – 9:30 PM" },
+    { label: "UK (GMT)", time: "1:30 AM – 2:30 AM" },
+    { label: "Europe (CET)", time: "2:30 AM – 3:30 AM" },
+    { label: "Dubai (GST)", time: "4:30 AM – 5:30 AM" },
+  ],
+  [
+    { label: "India (IST)", time: "7:30 AM – 8:30 AM" },
+    { label: "Singapore (SGT)", time: "10:00 AM – 11:00 AM" },
+    { label: "Australia (AEDT)", time: "12:30 PM – 1:30 PM" },
+    { label: "USA (EST)", time: "10:00 PM – 11:00 PM" },
+    { label: "UK (GMT)", time: "3:00 AM – 4:00 AM" },
+    { label: "Europe (CET)", time: "4:00 AM – 5:00 AM" },
+    { label: "Dubai (GST)", time: "6:00 AM – 7:00 AM" },
+  ],
+  [
+    { label: "India (IST)", time: "9:00 AM – 10:00 AM" },
+    { label: "Singapore (SGT)", time: "11:30 AM – 12:30 PM" },
+    { label: "Australia (AEDT)", time: "2:00 PM – 3:00 PM" },
+    { label: "USA (EST)", time: "11:30 PM – 12:30 AM" },
+    { label: "UK (GMT)", time: "4:30 AM – 5:30 AM" },
+    { label: "Europe (CET)", time: "5:30 AM – 6:30 AM" },
+    { label: "Dubai (GST)", time: "7:30 AM – 8:30 AM" },
+  ],
+  [
+    { label: "India (IST)", time: "11:00 AM – 12:00 PM" },
+    { label: "Singapore (SGT)", time: "1:30 PM – 2:30 PM" },
+    { label: "Australia (AEDT)", time: "4:00 PM – 5:00 PM" },
+    { label: "USA (EST)", time: "1:30 AM – 2:30 AM" },
+    { label: "UK (GMT)", time: "6:30 AM – 7:30 AM" },
+    { label: "Europe (CET)", time: "7:30 AM – 8:30 AM" },
+    { label: "Dubai (GST)", time: "9:30 AM – 10:30 AM" },
+  ],
+  [
+    { label: "India (IST)", time: "5:00 PM – 6:00 PM" },
+    { label: "Singapore (SGT)", time: "7:30 PM – 8:30 PM" },
+    { label: "Australia (AEDT)", time: "10:00 PM – 11:00 PM" },
+    { label: "USA (EST)", time: "7:30 AM – 8:30 AM" },
+    { label: "UK (GMT)", time: "12:30 PM – 1:30 PM" },
+    { label: "Europe (CET)", time: "1:30 PM – 2:30 PM" },
+    { label: "Dubai (GST)", time: "3:30 PM – 4:30 PM" },
+  ],
+  [
+    { label: "India (IST)", time: "7:00 PM – 8:00 PM" },
+    { label: "Singapore (SGT)", time: "9:30 PM – 10:30 PM" },
+    { label: "USA (EST)", time: "9:30 AM – 10:30 AM" },
+    { label: "UK (GMT)", time: "2:30 PM – 3:30 PM" },
+    { label: "Europe (CET)", time: "3:30 PM – 4:30 PM" },
+    { label: "Dubai (GST)", time: "5:30 PM – 6:30 PM" },
+  ],
+];
+
 // ─── Timezone conversion ──────────────────────────────────────────────────────
 const TIMEZONES = [
   { label: "India (IST)",      tz: "Asia/Kolkata" },
@@ -36,7 +97,7 @@ function convertISTtoTimezones(timeLabel: string) {
     return TIMEZONES.map(({ label, tz }) => {
       const fmt = (d: Date) =>
         d.toLocaleTimeString("en-US", { timeZone: tz, hour: "2-digit", minute: "2-digit", hour12: true });
-      return { label, time: `${fmt(start)} - ${fmt(end)}` };
+      return { label, time: `${fmt(start)} – ${fmt(end)}` };
     });
   } catch {
     return TIMEZONES.map(({ label }) => ({ label, time: timeLabel }));
@@ -58,7 +119,7 @@ const BATCH_THEMES = [
 // ─── Batch Card ───────────────────────────────────────────────────────────────
 function BatchCard({ c, index }: { c: ClassRow; index: number }) {
   const t = BATCH_THEMES[index % BATCH_THEMES.length];
-  const zones = convertISTtoTimezones(c.timeLabel);
+  const zones = DASHBOARD_BATCH_TIMINGS[index] ?? convertISTtoTimezones(c.timeLabel);
 
   return (
     <div style={{
@@ -111,7 +172,7 @@ function BatchCard({ c, index }: { c: ClassRow; index: number }) {
               style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}
             >
               <span style={{ fontSize: 13, color: "#9ca3af", whiteSpace: "nowrap", minWidth: 130 }}>
-                {label}:
+                {label}
               </span>
               <span style={{ fontSize: 13, fontWeight: 700, color: "#111827", whiteSpace: "nowrap", textAlign: "right" }}>
                 {time}
@@ -139,7 +200,7 @@ function BatchCard({ c, index }: { c: ClassRow; index: number }) {
             boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
           }}
         >
-          Join Session
+          Join Session →
         </a>
       </div>
     </div>

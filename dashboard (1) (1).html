@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoga Dashboard – Sarah Johnson</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F97316;
+    --orange-light: #FED7AA;
+    --orange-soft: #FFF7ED;
+    --orange-mid: #FFEDD5;
+    --white: #FFFFFF;
+    --gray-100: #F3F4F6;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-800: #1F2937;
+    --green: #22C55E;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--gray-800); min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white); border-bottom: 1px solid var(--gray-100);
+    padding: 0 32px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+  }
+  .nav-brand { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--orange); font-weight: 700; }
+  .nav-links { display: flex; align-items: center; gap: 8px; }
+  .nav-links a {
+    display: flex; align-items: center; gap: 5px;
+    text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--gray-600);
+    padding: 7px 14px; border-radius: 8px; transition: background 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { background: var(--orange-soft); color: var(--orange); }
+  .nav-links a.logout { color: var(--orange); border: 1.5px solid var(--orange-light); }
+  .nav-links a.logout:hover { background: var(--orange); color: white; }
+
+  /* LAYOUT */
+  .page { max-width: 1200px; margin: 0 auto; padding: 36px 24px 60px; }
+
+  /* WELCOME */
+  .welcome-block {
+    background: linear-gradient(120deg, var(--orange-soft) 0%, var(--white) 70%);
+    border: 1px solid var(--orange-light); border-radius: var(--radius);
+    padding: 28px 32px; margin-bottom: 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .welcome-block h1 { font-family: 'Playfair Display', serif; font-size: 1.75rem; color: var(--gray-800); font-weight: 700; margin-bottom: 4px; }
+  .welcome-block p { font-size: 0.9rem; color: var(--gray-400); }
+  .status-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--white); border: 1.5px solid var(--green); border-radius: 50px;
+    padding: 8px 18px; font-size: 0.85rem; font-weight: 600; color: var(--green);
+    white-space: nowrap; box-shadow: var(--shadow-sm);
+  }
+  .status-badge .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  .section-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+  .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; }
+  .section-header p { font-size: 0.82rem; color: var(--gray-400); }
+
+  /* MAIN GRID */
+  .main-grid { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
+  .batch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  /* BATCH CARD */
+  .batch-card {
+    background: var(--white); border: 1px solid var(--gray-100);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .batch-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .batch-card-header {
+    background: linear-gradient(135deg, var(--orange) 0%, #FB923C 100%);
+    padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .batch-card.red .batch-card-header { background: linear-gradient(135deg, #EF4444 0%, #F87171 100%); }
+  .batch-card-header .title { display: flex; align-items: center; gap: 8px; font-weight: 700; color: white; font-size: 0.95rem; }
+  .batch-card-header .title .icon {
+    width: 28px; height: 28px; background: rgba(255,255,255,0.25);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+  }
+  .global-tag { font-size: 0.7rem; font-weight: 600; background: rgba(255,255,255,0.25); color: white; padding: 3px 9px; border-radius: 20px; }
+  .batch-card-body { padding: 16px 18px; }
+  .time-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; border-bottom: 1px solid var(--gray-100); font-size: 0.82rem;
+  }
+  .time-row:last-of-type { border-bottom: none; }
+  .time-row .country { color: var(--gray-600); }
+  .time-row .time { color: var(--gray-800); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .join-btn {
+    margin-top: 14px; display: block; width: 100%; padding: 11px;
+    background: linear-gradient(135deg, var(--orange) 0%, #FB923C 100%);
+    color: white; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+    border: none; border-radius: var(--radius-sm); cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .batch-card.red .join-btn { background: linear-gradient(135deg, #EF4444 0%, #F87171 100%); }
+  .join-btn:hover { opacity: 0.9; transform: scale(0.99); }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 14px; }
+  .sponsor-section {
+    border-radius: var(--radius); overflow: hidden;
+    border: 1.5px solid transparent;
+  }
+  .sponsor-section-title {
+    text-align: center; font-size: 0.68rem; font-weight: 800;
+    letter-spacing: 1.8px; text-transform: uppercase;
+    padding: 8px 16px;
+  }
+  .sponsor-card {
+    background: var(--white);
+    padding: 14px 16px; text-align: center;
+  }
+  .sponsor-logo {
+    width: 46px; height: 46px; border-radius: 12px;
+    margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+  }
+  .sponsor-tier { font-size: 0.82rem; font-weight: 700; color: var(--gray-800); margin-bottom: 3px; }
+  .sponsor-desc { font-size: 0.72rem; color: var(--gray-400); line-height: 1.45; }
+
+  /* PER-TIER COLOURS */
+  .tier-title-wrap   { border-color: #C4B5FD; background: #F5F3FF; }
+  .tier-title-wrap .sponsor-section-title   { background: linear-gradient(135deg,#7C3AED,#A78BFA); color:white; }
+  .tier-title-wrap .sponsor-logo { background: #EDE9FE; }
+
+  .tier-gold-wrap    { border-color: #FCD34D; background: #FFFBEB; }
+  .tier-gold-wrap .sponsor-section-title    { background: linear-gradient(135deg,#D97706,#FBBF24); color:white; }
+  .tier-gold-wrap .sponsor-logo { background: #FEF3C7; }
+
+  .tier-silver-wrap  { border-color: #D1D5DB; background: #F9FAFB; }
+  .tier-silver-wrap .sponsor-section-title  { background: linear-gradient(135deg,#6B7280,#D1D5DB); color:white; }
+  .tier-silver-wrap .sponsor-logo { background: #F3F4F6; }
+
+  .tier-corp-wrap    { border-color: #BAE6FD; background: #F0F9FF; }
+  .tier-corp-wrap .sponsor-section-title    { background: linear-gradient(135deg,#0369A1,#38BDF8); color:white; }
+  .tier-corp-wrap .sponsor-logo { background: #E0F2FE; }
+
+  .tier-comm-wrap    { border-color: #BBF7D0; background: #F0FDF4; }
+  .tier-comm-wrap .sponsor-section-title    { background: linear-gradient(135deg,#15803D,#4ADE80); color:white; }
+  .tier-comm-wrap .sponsor-logo { background: #DCFCE7; }
+
+  /* REQUIREMENTS */
+  .requirements {
+    background: var(--white); border: 1px solid var(--gray-100);
+    border-radius: var(--radius); padding: 24px 28px; box-shadow: var(--shadow-sm); margin-top: 28px;
+  }
+  .requirements h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+  .requirements p { font-size: 0.875rem; color: var(--gray-600); margin-bottom: 16px; }
+  .req-list { display: flex; flex-wrap: wrap; gap: 10px; }
+  .req-item {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--orange-soft); border: 1px solid var(--orange-light);
+    border-radius: 8px; padding: 8px 14px; font-size: 0.82rem; font-weight: 500;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .page > * { animation: fadeUp 0.45s ease both; }
+  .page > *:nth-child(1){ animation-delay:.05s }
+  .page > *:nth-child(2){ animation-delay:.12s }
+  .page > *:nth-child(3){ animation-delay:.2s }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; }
+    .sponsor-section { flex: 1 1 200px; }
+  }
+  @media (max-width: 600px) {
+    nav { padding: 0 16px; }
+    .page { padding: 20px 14px 50px; }
+    .welcome-block { padding: 20px 18px; flex-direction: column; align-items: flex-start; gap: 14px; }
+    .welcome-block h1 { font-size: 1.35rem; }
+    .batch-grid { grid-template-columns: 1fr; gap: 14px; }
+    .sidebar { flex-direction: column; }
+    .req-list { flex-direction: column; }
+    .req-item { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">🧘 YogaFlow</div>
+  <div class="nav-links">
+    <a href="#">🏠 Home</a>
+    <a href="#" class="logout">↪ Logout</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="welcome-block">
+    <div>
+      <h1>Welcome back, Sarah Johnson</h1>
+      <p>sarah.johnson@email.com</p>
+    </div>
+    <div class="status-badge"><span class="dot"></span> Subscription Active</div>
+  </div>
+
+  <div class="section-header">
+    <h2>Class Schedule</h2>
+    <p>Today's Live Zoom Sessions (Times in IST)</p>
+  </div>
+
+  <div class="main-grid">
+
+    <div>
+      <div class="batch-grid">
+
+        <div class="batch-card">
+          <div class="batch-card-header">
+            <div class="title"><div class="icon">⚡</div> Batch 1</div>
+            <span class="global-tag">Global Session</span>
+          </div>
+          <div class="batch-card-body">
+            <div class="time-row"><span class="country">India (IST)</span><span class="time">6:00 AM – 7:00 AM</span></div>
+            <div class="time-row"><span class="country">Singapore (SGT)</span><span class="time">8:30 AM – 9:30 AM</span></div>
+            <div class="time-row"><span class="country">Australia (AEDT)</span><span class="time">11:00 AM – 12:00 PM</span></div>
+            <div class="time-row"><span class="country">USA (EST)</span><span class="time">8:30 PM – 9:30 PM</span></div>
+            <div class="time-row"><span class="country">UK (GMT)</span><span class="time">1:30 AM – 2:30 AM</span></div>
+            <div class="time-row"><span class="country">Europe (CET)</span><span class="time">2:30 AM – 3:30 AM</span></div>
+            <div class="time-row"><span class="country">Dubai (GST)</span><span class="time">4:30 AM – 5:30 AM</span></div>
+            <button class="join-btn">Join Session →</button>
+          </div>
+        </div>
+
+        <div class="batch-card">
+          <div class="batch-card-header">
+            <div class="title"><div class="icon">⚡</div> Batch 2</div>
+            <span class="global-tag">Global Session</span>
+          </div>
+          <div class="batch-card-body">
+            <div class="time-row"><span class="country">India (IST)</span><span class="time">7:30 AM – 8:30 AM</span></div>
+            <div class="time-row"><span class="country">Singapore (SGT)</span><span class="time">10:00 AM – 11:00 AM</span></div>
+            <div class="time-row"><span class="country">Australia (AEDT)</span><span class="time">12:30 PM – 1:30 PM</span></div>
+            <div class="time-row"><span class="country">USA (EST)</span><span class="time">10:00 PM – 11:00 PM</span></div>
+            <div class="time-row"><span class="country">UK (GMT)</span><span class="time">3:00 AM – 4:00 AM</span></div>
+            <div class="time-row"><span class="country">Europe (CET)</span><span class="time">4:00 AM – 5:00 AM</span></div>
+            <div class="time-row"><span class="country">Dubai (GST)</span><span class="time">6:00 AM – 7:00 AM</span></div>
+            <button class="join-btn">Join Session →</button>
+          </div>
+        </div>
+
+        <div class="batch-card">
+          <div class="batch-card-header">
+            <div class="title"><div class="icon">⚡</div> Batch 3</div>
+            <span class="global-tag">Global Session</span>
+          </div>
+          <div class="batch-card-body">
+            <div class="time-row"><span class="country">India (IST)</span><span class="time">9:00 AM – 10:00 AM</span></div>
+            <div class="time-row"><span class="country">Singapore (SGT)</span><span class="time">11:30 AM – 12:30 PM</span></div>
+            <div class="time-row"><span class="country">Australia (AEDT)</span><span class="time">2:00 PM – 3:00 PM</span></div>
+            <div class="time-row"><span class="country">USA (EST)</span><span class="time">11:30 PM – 12:30 AM</span></div>
+            <div class="time-row"><span class="country">UK (GMT)</span><span class="time">4:30 AM – 5:30 AM</span></div>
+            <div class="time-row"><span class="country">Europe (CET)</span><span class="time">5:30 AM – 6:30 AM</span></div>
+            <div class="time-row"><span class="country">Dubai (GST)</span><span class="time">7:30 AM – 8:30 AM</span></div>
+            <button class="join-btn">Join Session →</button>
+          </div>
+        </div>
+
+        <div class="batch-card">
+          <div class="batch-card-header">
+            <div class="title"><div class="icon">⚡</div> Batch 4</div>
+            <span class="global-tag">Global Session</span>
+          </div>
+          <div class="batch-card-body">
+            <div class="time-row"><span class="country">India (IST)</span><span class="time">11:00 AM – 12:00 PM</span></div>
+            <div class="time-row"><span class="country">Singapore (SGT)</span><span class="time">1:30 PM – 2:30 PM</span></div>
+            <div class="time-row"><span class="country">Australia (AEDT)</span><span class="time">4:00 PM – 5:00 PM</span></div>
+            <div class="time-row"><span class="country">USA (EST)</span><span class="time">1:30 AM – 2:30 AM</span></div>
+            <div class="time-row"><span class="country">UK (GMT)</span><span class="time">6:30 AM – 7:30 AM</span></div>
+            <div class="time-row"><span class="country">Europe (CET)</span><span class="time">7:30 AM – 8:30 AM</span></div>
+            <div class="time-row"><span class="country">Dubai (GST)</span><span class="time">9:30 AM – 10:30 AM</span></div>
+            <button class="join-btn">Join Session →</button>
+          </div>
+        </div>
+
+        <div class="batch-card">
+          <div class="batch-card-header">
+            <div class="title"><div class="icon">⚡</div> Batch 5</div>
+            <span class="global-tag">Global Session</span>
+          </div>
+          <div class="batch-card-body">
+            <div class="time-row"><span class="country">India (IST)</span><span class="time">5:00 PM – 6:00 PM</span></div>
+            <div class="time-row"><span class="country">Singapore (SGT)</span><span class="time">7:30 PM – 8:30 PM</span></div>
+            <div class="time-row"><span class="country">Australia (AEDT)</span><span class="time">10:00 PM – 11:00 PM</span></div>
+            <div class="time-row"><span class="country">USA (EST)</span><span class="time">7:30 AM – 8:30 AM</span></div>
+            <div class="time-row"><span class="country">UK (GMT)</span><span class="time">12:30 PM – 1:30 PM</span></div>
+            <div class="time-row"><span class="country">Europe (CET)</span><span class="time">1:30 PM – 2:30 PM</span></div>
+            <div class="time-row"><span class="country">Dubai (GST)</span><span class="time">3:30 PM – 4:30 PM</span></div>
+            <button class="join-btn">Join Session →</button>
+          </div>
+        </div>
+
+        <div class="batch-card red">
+          <div class="batch-card-header">
+            <div class="title"><div class="icon">⚡</div> Batch 6</div>
+            <span class="global-tag">Global Session</span>
+          </div>
+          <div class="batch-card-body">
+            <div class="time-row"><span class="country">India (IST)</span><span class="time">7:00 PM – 8:00 PM</span></div>
+            <div class="time-row"><span class="country">Singapore (SGT)</span><span class="time">9:30 PM – 10:30 PM</span></div>
+            <div class="time-row"><span class="country">USA (EST)</span><span class="time">9:30 AM – 10:30 AM</span></div>
+            <div class="time-row"><span class="country">UK (GMT)</span><span class="time">2:30 PM – 3:30 PM</span></div>
+            <div class="time-row"><span class="country">Europe (CET)</span><span class="time">3:30 PM – 4:30 PM</span></div>
+            <div class="time-row"><span class="country">Dubai (GST)</span><span class="time">5:30 PM – 6:30 PM</span></div>
+            <button class="join-btn">Join Session →</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="requirements">
+        <h3>Requirements for Yoga Classes</h3>
+        <p>To ensure a smooth and comfortable experience during the sessions, please keep the following ready:</p>
+        <div class="req-list">
+          <div class="req-item">📶 High speed internet connection</div>
+          <div class="req-item">🧘 Yoga mat</div>
+          <div class="req-item">💧 Water bottle</div>
+          <div class="req-item">🧴 Face towel</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="sponsor-section tier-title-wrap">
+        <div class="sponsor-section-title">✦ Title Sponsor ✦</div>
+        <div class="sponsor-card">
+          <div class="sponsor-logo">🌿</div>
+          <div class="sponsor-tier">Title Sponsor</div>
+          <div class="sponsor-desc">Leading provider of organic wellness products and Ayurvedic supplements</div>
+        </div>
+      </div>
+
+      <div class="sponsor-section tier-gold-wrap">
+        <div class="sponsor-section-title">★ Gold Sponsor ★</div>
+        <div class="sponsor-card">
+          <div class="sponsor-logo">🌟</div>
+          <div class="sponsor-tier">Gold Sponsor</div>
+          <div class="sponsor-desc">Leading provider of organic wellness products and Ayurvedic supplements</div>
+        </div>
+      </div>
+
+      <div class="sponsor-section tier-silver-wrap">
+        <div class="sponsor-section-title">◆ Silver Sponsor ◆</div>
+        <div class="sponsor-card">
+          <div class="sponsor-logo">🌱</div>
+          <div class="sponsor-tier">Silver Sponsor 2</div>
+          <div class="sponsor-desc">Leading provider of organic wellness products and Ayurvedic supplements</div>
+        </div>
+      </div>
+
+      <div class="sponsor-section tier-corp-wrap">
+        <div class="sponsor-section-title">▲ Corporate Partner ▲</div>
+        <div class="sponsor-card">
+          <div class="sponsor-logo">🏢</div>
+          <div class="sponsor-tier">Corporate Partner</div>
+          <div class="sponsor-desc">Leading provider of organic wellness products and Ayurvedic supplements</div>
+        </div>
+      </div>
+
+      <div class="sponsor-section tier-comm-wrap">
+        <div class="sponsor-section-title">● Community Partner ●</div>
+        <div class="sponsor-card">
+          <div class="sponsor-logo">🤝</div>
+          <div class="sponsor-tier">Community Partner</div>
+          <div class="sponsor-desc">Leading provider of organic wellness products and Ayurvedic supplements</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
