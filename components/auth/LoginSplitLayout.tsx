@@ -51,9 +51,9 @@ export function LoginSplitLayout({ children }: Props) {
           </div>
 
           <p className="pt-4 text-center text-xs text-gray-400">
-            Copyright© 2025 Samsaraa WellTek Pvt Ltd. All rights reserved.
+            Copyright© 2025 Samsaraa Wellness Pvt Ltd. All rights reserved.
             <br />
-            Powered by Samsaraa WellTek Pvt Ltd
+            Powered by Samsaraa Wellness Pvt Ltd
           </p>
         </div>
       </div>

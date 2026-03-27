@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import { FieldError } from "@/components/ui/FieldError";
@@ -246,13 +247,13 @@ export function RegisterForm() {
         />
         <label htmlFor="terms" className="cursor-pointer text-sm text-gray-600">
           I agree to the{" "}
-          <a href="#" className="text-orange-500 underline hover:text-orange-600">
+          <Link href="/terms-and-conditions" className="text-orange-500 underline hover:text-orange-600">
             Terms and Conditions
-          </a>{" "}
+          </Link>{" "}
           &amp;{" "}
-          <a href="#" className="text-orange-500 underline hover:text-orange-600">
+          <Link href="#" className="text-orange-500 underline hover:text-orange-600">
             Privacy Policy
-          </a>
+          </Link>
         </label>
       </div>
 
