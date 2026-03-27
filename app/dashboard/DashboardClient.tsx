@@ -26,6 +26,7 @@ export function DashboardClient() {
   const router = useRouter();
   const [me, setMe] = useState<Me | null>(null);
   const [classes, setClasses] = useState<ClassRow[]>([]);
+  const [joinedClassIdToday, setJoinedClassIdToday] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [classesErr, setClassesErr] = useState<string | null>(null);
 
@@ -56,10 +57,12 @@ export function DashboardClient() {
 
         const clsJson = (await clsRes.json()) as {
           classes?: ClassRow[];
+          joinedClassIdToday?: string | null;
           message?: string;
         };
         if (clsRes.ok && clsJson.classes) {
           setClasses(clsJson.classes);
+          setJoinedClassIdToday(clsJson.joinedClassIdToday ?? null);
         } else {
           setClassesErr(clsJson.message ?? "Could not load classes");
         }
@@ -141,7 +144,11 @@ export function DashboardClient() {
       {classesErr ? (
         <p className="mt-6 text-sm text-[var(--color-danger)]">{classesErr}</p>
       ) : (
-        <ClassScheduleSection classes={classes} />
+        <ClassScheduleSection
+          classes={classes}
+          joinedClassIdToday={joinedClassIdToday}
+          onJoinedClassIdChange={setJoinedClassIdToday}
+        />
       )}
     </DashboardShell>
   );

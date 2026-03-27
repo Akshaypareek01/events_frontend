@@ -249,7 +249,7 @@ export function PayClient() {
           Complete payment
         </h1>
         <p className="mx-auto mt-3 max-w-md text-[15px] font-light leading-relaxed text-[#5A3C22]">
-          Secured by Razorpay · ₹499 program fee
+          Secured by Razorpay · ₹499 + 18% GST (total ₹588.82)
         </p>
         <IydCard className="mt-8 gap-4">
           {err && (

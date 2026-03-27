@@ -17,21 +17,49 @@ export default function RegisterPage() {
             className="object-cover object-center"
             priority
           />
-          <div className="relative z-10 flex flex-col items-center gap-5 w-full max-w-[320px]">
-            <Image
-              src="/pbmicrosoft.png"
-              alt="Powered by Microsoft"
-              width={320}
-              height={120}
-              className="w-full rounded-2xl object-contain shadow-sm"
-            />
-            <Image
-              src="/pbmgamazon.png"
-              alt="Co-Powered by Microsoft, Google & Amazon"
-              width={320}
-              height={140}
-              className="w-full rounded-2xl object-contain shadow-sm"
-            />
+          <div className="relative z-10 w-full max-w-[320px] rounded-2xl border border-white/70 bg-white/85 p-3 shadow-lg backdrop-blur">
+            <div className="space-y-3">
+              <div className="rounded-xl border border-gray-200 bg-white p-2.5 shadow-sm">
+                <p className="text-center text-xl font-semibold tracking-wide text-black">Powered by</p>
+              </div>
+              <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-3.5 shadow-sm">
+                <div className="mx-auto flex w-fit flex-col items-center rounded-xl bg-white px-4 py-3 shadow-md">
+                  <Image
+                    src="/adaptive-icon.png"
+                    alt="Samsara logo"
+                    width={34}
+                    height={34}
+                    className="h-8 w-8 object-contain"
+                  />
+                  <p className="mt-1.5 text-xs font-medium text-gray-800">Samsara</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl border border-gray-200 bg-white p-2.5 shadow-sm">
+                <p className="text-center text-xl font-semibold tracking-wide text-black">Co-Powered by</p>
+              </div>
+              <div className="rounded-xl border border-pink-100 bg-pink-50/60 p-3.5 shadow-sm">
+                <div className="grid grid-cols-3 gap-2.5">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="flex flex-col items-center rounded-xl bg-white px-2 py-2.5 shadow-md"
+                    >
+                      <Image
+                        src="/adaptive-icon.png"
+                        alt="Samsara logo"
+                        width={30}
+                        height={30}
+                        className="h-7 w-7 object-contain"
+                      />
+                      <p className="mt-1 text-[11px] font-medium text-gray-800">Samsara</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

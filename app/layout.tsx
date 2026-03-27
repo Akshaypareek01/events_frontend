@@ -14,7 +14,7 @@ const fontBody = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Samsara Yoga — 3 Month Program",
-  description: "Daily morning & evening live classes. Register for ₹499 or via your company.",
+  description: "Daily morning & evening live classes. Register for ₹499 + 18% GST (₹588.82) or via your company.",
 };
 
 /** Mobile-first: proper scaling + theme color for browser chrome. */

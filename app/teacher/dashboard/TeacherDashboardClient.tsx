@@ -116,7 +116,13 @@ export function TeacherDashboardClient() {
       {/* Schedule */}
       {classesErr
         ? <p style={{ color: "var(--color-danger)", fontSize: 14 }}>{classesErr}</p>
-        : <ClassScheduleSection classes={classes} />
+        : (
+          <ClassScheduleSection
+            classes={classes}
+            joinedClassIdToday={null}
+            onJoinedClassIdChange={() => {}}
+          />
+        )
       }
     </DashboardShell>
   );

@@ -1,5 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { getApiBaseUrl } from "@/lib/api";
+import { getUserToken } from "@/lib/auth";
+
 export type ClassRow = {
   id: string;
   title: string;
@@ -12,6 +16,106 @@ type BatchTimingRow = {
   label: string;
   time: string;
 };
+
+const JOIN_EARLY_MINUTES = 5;
+
+function parseTwelveHourTimeToMinutes(value: string): number | null {
+  const m = value.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!m) return null;
+  let hour = Number.parseInt(m[1], 10);
+  const minute = Number.parseInt(m[2], 10);
+  const meridiem = m[3].toUpperCase();
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
+  if (meridiem === "PM" && hour !== 12) hour += 12;
+  if (meridiem === "AM" && hour === 12) hour = 0;
+  return hour * 60 + minute;
+}
+
+function currentIstMinutesSinceMidnight(now: Date = new Date()): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(now);
+  const hour = Number.parseInt(parts.find((p) => p.type === "hour")?.value ?? "0", 10);
+  const minute = Number.parseInt(parts.find((p) => p.type === "minute")?.value ?? "0", 10);
+  return hour * 60 + minute;
+}
+
+function parseIndiaSessionWindow(zones: BatchTimingRow[]): { start: number; end: number } | null {
+  const india = zones.find((z) => z.label === "India (IST)");
+  if (!india) return null;
+  const [startRaw, endRaw] = india.time.split(/–|-/).map((s) => s.trim());
+  if (!startRaw || !endRaw) return null;
+  const start = parseTwelveHourTimeToMinutes(startRaw);
+  const endBase = parseTwelveHourTimeToMinutes(endRaw);
+  if (start === null || endBase === null) return null;
+  const end = endBase <= start ? endBase + 24 * 60 : endBase;
+  return { start, end };
+}
+
+function canJoinSessionNow(zones: BatchTimingRow[], now: Date = new Date()): boolean {
+  const window = parseIndiaSessionWindow(zones);
+  if (!window) return false;
+  const nowIst = currentIstMinutesSinceMidnight(now);
+  const joinStart = window.start - JOIN_EARLY_MINUTES;
+  const candidates = [nowIst, nowIst + 24 * 60];
+  return candidates.some((m) => m >= joinStart && m <= window.end);
+}
+
+function formatMinutesLabel(mins: number): string {
+  if (mins <= 0) return "now";
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h <= 0) return `${m} min`;
+  if (m === 0) return `${h} hr`;
+  return `${h}h ${m}m`;
+}
+
+function sessionJoinStatus(
+  zones: BatchTimingRow[],
+  lockedToOtherSession: boolean,
+  now: Date = new Date(),
+): { text: string; color: string } {
+  if (lockedToOtherSession) {
+    return {
+      text: "Locked for today: you already joined another batch.",
+      color: "#9ca3af",
+    };
+  }
+
+  const window = parseIndiaSessionWindow(zones);
+  if (!window) {
+    return { text: "Available 5 minutes before start (IST).", color: "#9ca3af" };
+  }
+  const nowIst = currentIstMinutesSinceMidnight(now);
+  const joinStart = window.start - JOIN_EARLY_MINUTES;
+  const candidates = [nowIst, nowIst + 24 * 60];
+  const inWindow = candidates.some((m) => m >= joinStart && m <= window.end);
+  if (inWindow) {
+    return { text: "Live now. You can join this session.", color: "#15803d" };
+  }
+
+  const nextJoinStart =
+    joinStart >= nowIst
+      ? joinStart
+      : joinStart + 24 * 60;
+  const nextEnd = window.end >= nowIst ? window.end : window.end + 24 * 60;
+
+  if (nowIst < nextJoinStart) {
+    return {
+      text: `Join opens in ${formatMinutesLabel(nextJoinStart - nowIst)} (5 min before start).`,
+      color: "#9ca3af",
+    };
+  }
+
+  if (nowIst > nextEnd) {
+    return { text: "Session ended for now.", color: "#9ca3af" };
+  }
+
+  return { text: "Available 5 minutes before start (IST).", color: "#9ca3af" };
+}
 
 const DASHBOARD_BATCH_TIMINGS: BatchTimingRow[][] = [
   [
@@ -62,6 +166,7 @@ const DASHBOARD_BATCH_TIMINGS: BatchTimingRow[][] = [
   [
     { label: "India (IST)", time: "7:00 PM – 8:00 PM" },
     { label: "Singapore (SGT)", time: "9:30 PM – 10:30 PM" },
+    { label: "Australia (AEDT)", time: "12:00 AM – 1:00 AM" },
     { label: "USA (EST)", time: "9:30 AM – 10:30 AM" },
     { label: "UK (GMT)", time: "2:30 PM – 3:30 PM" },
     { label: "Europe (CET)", time: "3:30 PM – 4:30 PM" },
@@ -117,9 +222,26 @@ const BATCH_THEMES = [
 ];
 
 // ─── Batch Card ───────────────────────────────────────────────────────────────
-function BatchCard({ c, index }: { c: ClassRow; index: number }) {
+function BatchCard({
+  c,
+  index,
+  joinedClassIdToday,
+  joinBusyClassId,
+  onJoin,
+}: {
+  c: ClassRow;
+  index: number;
+  joinedClassIdToday: string | null;
+  joinBusyClassId: string | null;
+  onJoin: (session: ClassRow) => Promise<void>;
+}) {
   const t = BATCH_THEMES[index % BATCH_THEMES.length];
   const zones = DASHBOARD_BATCH_TIMINGS[index] ?? convertISTtoTimezones(c.timeLabel);
+  const joinByTimeWindow = canJoinSessionNow(zones);
+  const lockedToOtherSession = Boolean(joinedClassIdToday && joinedClassIdToday !== c.id);
+  const joinEnabled = joinByTimeWindow && !lockedToOtherSession;
+  const isJoining = joinBusyClassId === c.id;
+  const status = sessionJoinStatus(zones, lockedToOtherSession);
 
   return (
     <div style={{
@@ -183,9 +305,18 @@ function BatchCard({ c, index }: { c: ClassRow; index: number }) {
 
         {/* Join button */}
         <a
-          href={c.zoomLink}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={joinEnabled ? c.zoomLink : undefined}
+          target={joinEnabled ? "_blank" : undefined}
+          rel={joinEnabled ? "noopener noreferrer" : undefined}
+          aria-disabled={!joinEnabled || isJoining}
+          onClick={(e) => {
+            if (!joinEnabled || isJoining) {
+              e.preventDefault();
+              return;
+            }
+            e.preventDefault();
+            void onJoin(c);
+          }}
           style={{
             display: "block",
             textAlign: "center",
@@ -198,10 +329,23 @@ function BatchCard({ c, index }: { c: ClassRow; index: number }) {
             textDecoration: "none",
             marginTop: "auto",
             boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+            opacity: joinEnabled && !isJoining ? 1 : 0.45,
+            cursor: joinEnabled && !isJoining ? "pointer" : "not-allowed",
+            pointerEvents: "auto",
           }}
         >
-          Join Session →
+          {isJoining ? "Joining..." : "Join Session →"}
         </a>
+        <p
+          style={{
+            marginTop: 8,
+            marginBottom: 0,
+            fontSize: 12,
+            color: status.color,
+          }}
+        >
+          {status.text}
+        </p>
       </div>
     </div>
   );
@@ -266,15 +410,69 @@ function SponsorsSection() {
 
 
 // ─── Main Export ──────────────────────────────────────────────────────────────
-export function ClassScheduleSection({ classes }: { classes: ClassRow[] }) {
+export function ClassScheduleSection({
+  classes,
+  joinedClassIdToday,
+  onJoinedClassIdChange,
+}: {
+  classes: ClassRow[];
+  joinedClassIdToday: string | null;
+  onJoinedClassIdChange: (id: string | null) => void;
+}) {
+  const [joinBusyClassId, setJoinBusyClassId] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
+
+  async function handleJoin(session: ClassRow): Promise<void> {
+    const token = getUserToken();
+    if (!token) {
+      setJoinError("Session expired. Please log in again.");
+      return;
+    }
+    setJoinError(null);
+    setJoinBusyClassId(session.id);
+    try {
+      const res = await fetch(`${getApiBaseUrl()}/api/v1/classes/${session.id}/join`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = (await res.json()) as {
+        message?: string;
+        joinedClassIdToday?: string | null;
+        details?: { joinedClassIdToday?: string };
+      };
+      if (!res.ok) {
+        onJoinedClassIdChange(data.details?.joinedClassIdToday ?? joinedClassIdToday);
+        setJoinError(data.message ?? "Could not join this session");
+        return;
+      }
+      onJoinedClassIdChange(data.joinedClassIdToday ?? session.id);
+      window.open(session.zoomLink, "_blank", "noopener,noreferrer");
+    } catch {
+      setJoinError("Network error. Please try again.");
+    } finally {
+      setJoinBusyClassId(null);
+    }
+  }
+
   return (
-    <div>
+    <div style={{ marginTop: 16 }}>
       <h2 style={{ fontSize: 20, fontWeight: 800, color: "#111827", marginBottom: 4 }}>
         Class Schedule
       </h2>
       <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 24 }}>
         Today&apos;s Live Zoom Sessions (Times in IST)
       </p>
+      {joinedClassIdToday && (
+        <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 12 }}>
+          You already joined one batch today. Only that batch can be joined again today.
+        </p>
+      )}
+      {joinError && (
+        <p style={{ fontSize: 13, color: "#dc2626", marginBottom: 12 }}>{joinError}</p>
+      )}
 
       {classes.length === 0 ? (
         <div style={{
@@ -291,7 +489,16 @@ export function ClassScheduleSection({ classes }: { classes: ClassRow[] }) {
           gridTemplateColumns: "repeat(3, 1fr)",   // ← always 3 cols like reference
           gap: 20,
         }}>
-          {classes.map((c, i) => <BatchCard key={c.id} c={c} index={i} />)}
+          {classes.map((c, i) => (
+            <BatchCard
+              key={c.id}
+              c={c}
+              index={i}
+              joinedClassIdToday={joinedClassIdToday}
+              joinBusyClassId={joinBusyClassId}
+              onJoin={handleJoin}
+            />
+          ))}
         </div>
       )}
 

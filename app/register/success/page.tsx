@@ -26,7 +26,7 @@ export default async function RegisterSuccessPage({
             </p>
           ) : (
             <p className="mt-4 text-[var(--color-muted)]">
-              Registration saved. Complete payment (₹499) when we wire Cashfree — you&apos;ll get a link by
+              Registration saved. Complete payment (₹499 + 18% GST = ₹588.82) when we wire Cashfree — you&apos;ll get a link by
               email (stub logged on the server today).
             </p>
           )}
