@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { LoginSplitLayout } from "@/components/auth/LoginSplitLayout";
@@ -262,12 +261,14 @@ export function LoginForm() {
           </div>
         </form>
 
+        {/* Teacher login link disabled for public users — re-enable if needed
         <p className="mt-6 text-center text-sm text-gray-500">
           Teacher (username & password)?{" "}
           <Link href="/teacher/login" className="font-semibold text-orange-500 hover:text-orange-600">
             Teacher login
           </Link>
         </p>
+        */}
       </LoginSplitLayout>
     );
   }
