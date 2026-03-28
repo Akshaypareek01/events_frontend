@@ -12,6 +12,8 @@ type RazorpayOptions = {
   currency: string;
   name: string;
   description?: string;
+  /** Absolute URL to merchant logo (Razorpay fetches from their servers). */
+  image?: string;
   order_id: string;
   handler: (response: {
     razorpay_payment_id: string;

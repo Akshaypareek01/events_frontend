@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +12,16 @@ import { getUserToken } from "@/lib/auth";
 const iy = {
   border: "rgba(232,84,26,0.14)",
 } as const;
+
+/**
+ * Logo URL passed to Razorpay `image` — their servers fetch it, so it must be absolute and
+ * publicly reachable (HTTPS in production). Optional full URL if assets live elsewhere.
+ */
+function razorpayCheckoutLogoUrl(): string {
+  const full = process.env.NEXT_PUBLIC_CHECKOUT_LOGO_URL?.trim();
+  if (full) return full;
+  return `${window.location.origin}/adaptive-icon.png`;
+}
 
 function BackChevronIcon() {
   return (
@@ -169,12 +180,16 @@ export function PayClient() {
         return;
       }
 
+      const checkoutLogoUrl = razorpayCheckoutLogoUrl();
+
       const rzp = new window.Razorpay({
         key: orderData.keyId ?? keyId,
         amount: orderData.amount,
         currency: orderData.currency ?? "INR",
-        name: "Samsara Yoga",
+        /** Merchant title on Razorpay modal (font is usually set in Razorpay Dashboard → Checkout styling → Times). */
+        name: "Samsara",
         description: "Program fee",
+        image: checkoutLogoUrl,
         order_id: orderData.orderId,
         theme: { color: "#E8541A" },
         handler: async (response) => {
@@ -241,6 +256,16 @@ export function PayClient() {
         onReady={() => setScriptReady(true)}
       />
       <div className="w-full max-w-lg text-balance text-center">
+        <div className="mb-5 flex justify-center">
+          <Image
+            src="/adaptive-icon.png"
+            alt="Samsara"
+            width={88}
+            height={88}
+            className="rounded-full shadow-[0_10px_28px_rgba(28,18,8,0.12)]"
+            priority
+          />
+        </div>
         <p className="text-[10px] font-normal uppercase tracking-[4px] text-[#E8541A]">Checkout</p>
         <h1
           className="mt-3 text-[clamp(1.75rem,4vw,2.25rem)] font-normal leading-tight text-[#1C1208]"
