@@ -29,7 +29,7 @@ export function AdminProgramPanel() {
     if (!token) {
       setLoading(false);
       setProgram({
-        title: "Program",
+        title: "Samsara — 80-Day Yoga Mohotsav",
         durationMonths: 3,
         priceInr: 499,
         currency: "INR",
@@ -48,7 +48,7 @@ export function AdminProgramPanel() {
       if (!res.ok) {
         setErr("Could not load program settings");
         setProgram({
-          title: "Program",
+          title: "Samsara — 80-Day Yoga Mohotsav",
           durationMonths: 3,
           priceInr: 499,
           currency: "INR",
@@ -62,7 +62,7 @@ export function AdminProgramPanel() {
     } catch {
       setErr("Network error");
       setProgram({
-        title: "Program",
+        title: "Samsara — 80-Day Yoga Mohotsav",
         durationMonths: 3,
         priceInr: 499,
         currency: "INR",

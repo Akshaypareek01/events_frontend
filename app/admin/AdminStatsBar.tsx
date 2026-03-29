@@ -11,6 +11,7 @@ export type AdminStats = {
   corporateUsers: number;
   individualUsers: number;
   corporateDomainsCount: number;
+  corporateCompaniesCount?: number;
   paidRegistrations: number;
   totalRevenueInr: number;
   programPriceInr: number;
@@ -101,9 +102,9 @@ export function AdminStatsBar() {
       <StatCard label="Individual" value={stats.individualUsers} sub="userType: normal" />
       <StatCard label="Corporate users" value={stats.corporateUsers} />
       <StatCard
-        label="Corporate domains"
-        value={stats.corporateDomainsCount}
-        sub="allowed in program"
+        label="Corporate companies"
+        value={stats.corporateCompaniesCount ?? 0}
+        sub="name + coupon"
       />
       <StatCard label="Paid registrations" value={stats.paidRegistrations} sub={`@ ₹${stats.programPriceInr} each`} />
       <StatCard

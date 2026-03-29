@@ -1,6 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Card } from "@/components/ui/Card";
-import { MarketingShell } from "@/components/layout/MarketingShell";
 
 type SearchParams = Promise<{ kind?: string }>;
 
@@ -13,31 +12,61 @@ export default async function RegisterSuccessPage({
   const corporate = kind === "corporate";
 
   return (
-    <MarketingShell>
-      <div className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-        <Card>
-          <h1 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-text)]">
-            You&apos;re in
-          </h1>
-          {corporate ? (
-            <p className="mt-4 text-[var(--color-muted)]">
-              Your corporate access is active. Dashboard login arrives in Phase 07 — for now, watch for
-              email updates (Phase 06).
-            </p>
-          ) : (
-            <p className="mt-4 text-[var(--color-muted)]">
-              Registration saved. Complete payment (₹499 + 18% GST = ₹588.82) when we wire Cashfree — you&apos;ll get a link by
-              email (stub logged on the server today).
-            </p>
-          )}
-          <Link
-            href="/"
-            className="mt-8 inline-flex rounded-xl bg-[var(--color-primary)] px-5 py-2.5 text-sm font-medium text-[var(--color-primary-fg)]"
-          >
-            Back to home
-          </Link>
-        </Card>
+    <div className="relative min-h-screen overflow-hidden bg-white text-gray-800">
+      <div className="pointer-events-none absolute bottom-0 right-0 z-0 hidden sm:block">
+        <Image
+          src="/monk.png"
+          alt=""
+          width={190}
+          height={280}
+          className="object-contain object-bottom opacity-90"
+        />
       </div>
-    </MarketingShell>
+
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-[500px] flex-col px-6 py-10 sm:px-8 sm:py-12">
+        <Link
+          href="/register"
+          className="mb-6 inline-flex w-fit items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-orange-500"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to registration
+        </Link>
+
+        <div className="flex flex-1 flex-col justify-center">
+          <div className="rounded-2xl border border-gray-100 bg-white px-7 py-8 shadow-md">
+            <h1 className="text-2xl font-bold text-gray-900">Registration complete</h1>
+            {corporate ? (
+              <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                You&apos;re registered for the <strong className="font-semibold text-gray-800">80-day</strong> Yoga
+                Mohotsav through your organisation. Your corporate access is active — no payment needed. Check your
+                inbox for a confirmation email, then sign in with the same email you used here; we&apos;ll send you a
+                one-time code to access your dashboard.
+              </p>
+            ) : (
+              <p className="mt-4 text-sm leading-relaxed text-gray-600">
+                Registration saved for the <strong className="font-semibold text-gray-800">80-day</strong> program.
+                Complete payment (₹499 + 18% GST = ₹588.82) when prompted — you&apos;ll get a link by email. After
+                payment, sign in from the login page with your email.
+              </p>
+            )}
+            <Link
+              href="/login"
+              className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-orange-500 py-3.5 text-sm font-semibold text-white transition hover:bg-orange-600 active:bg-orange-700"
+            >
+              Sign in
+            </Link>
+          </div>
+
+          <p className="mt-6 text-center text-sm text-gray-400">
+            Need help?{" "}
+            <Link href="/login" className="text-orange-500 hover:underline">
+              Login
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -20,6 +20,7 @@ type Me = {
   userType: "normal" | "corporate";
   paymentStatus: "pending" | "paid" | "free";
   isApproved: boolean;
+  companyName?: string;
 };
 
 export function DashboardClient() {

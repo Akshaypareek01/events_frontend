@@ -13,7 +13,7 @@ const fontBody = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Samsara Yoga — 3 Month Program",
+  title: "Samsara Yoga — 80-Day Yoga Mohotsav",
   description: "Daily morning & evening live classes. Register for ₹499 + 18% GST (₹588.82) or via your company.",
 };
 

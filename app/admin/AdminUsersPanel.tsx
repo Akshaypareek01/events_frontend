@@ -15,6 +15,7 @@ export type AdminUserRow = {
   phone?: string;
   city?: string;
   country?: string;
+  companyName?: string;
   companyDomain?: string;
   userType: string;
   paymentStatus: string;
@@ -196,6 +197,7 @@ export function AdminUsersPanel({ mode }: Props) {
   const title = mode === "corporate" ? "Corporate users" : "Users";
   const from = data && data.total > 0 ? (data.page - 1) * data.limit + 1 : 0;
   const to = data ? Math.min(data.page * data.limit, data.total) : 0;
+  const colSpan = mode === "corporate" ? 10 : 9;
 
   return (
     <div className="space-y-4">
@@ -296,7 +298,9 @@ export function AdminUsersPanel({ mode }: Props) {
       ) : (
         <>
           <div className="overflow-x-auto rounded-xl border border-[var(--color-border)]">
-            <table className="w-full min-w-[720px] text-left text-sm">
+            <table
+              className={`w-full text-left text-sm ${mode === "corporate" ? "min-w-[960px]" : "min-w-[720px]"}`}
+            >
               <thead className="bg-[var(--color-surface-muted)]/60">
                 <tr>
                   <th className="w-10 px-2 py-2">
@@ -313,6 +317,7 @@ export function AdminUsersPanel({ mode }: Props) {
                   <th className="px-3 py-2">Email</th>
                   <th className="px-3 py-2">Phone</th>
                   <th className="px-3 py-2">City</th>
+                  {mode === "corporate" && <th className="px-3 py-2">Company</th>}
                   <th className="px-3 py-2">Type</th>
                   <th className="px-3 py-2">Payment</th>
                   <th className="px-3 py-2">Approved</th>
@@ -324,7 +329,7 @@ export function AdminUsersPanel({ mode }: Props) {
               <tbody>
                 {data?.users.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-3 py-8 text-center text-[var(--color-muted)]">
+                    <td colSpan={colSpan} className="px-3 py-8 text-center text-[var(--color-muted)]">
                       No users found.
                     </td>
                   </tr>
@@ -345,6 +350,11 @@ export function AdminUsersPanel({ mode }: Props) {
                       <td className="px-3 py-2 break-all">{u.email}</td>
                       <td className="px-3 py-2">{u.phone ?? "—"}</td>
                       <td className="px-3 py-2">{u.city ?? "—"}</td>
+                      {mode === "corporate" && (
+                        <td className="max-w-[140px] truncate px-3 py-2" title={u.companyName}>
+                          {u.companyName ?? "—"}
+                        </td>
+                      )}
                       <td className="px-3 py-2">{u.userType}</td>
                       <td className="px-3 py-2">{u.paymentStatus}</td>
                       <td className="px-3 py-2">{u.isApproved ? "yes" : "no"}</td>

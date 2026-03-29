@@ -157,6 +157,18 @@ export default function TermsAndConditionsPage() {
           ))}
         </div>
 
+        <section
+          id="privacy"
+          className="mt-8 scroll-mt-6 space-y-2 border-t border-orange-100 pt-6"
+        >
+          <h2 className="text-base font-semibold text-gray-900">Privacy</h2>
+          <p className="text-sm leading-6 text-gray-700">
+            We use the information you provide at registration (name, email, phone, location) to run this
+            event, send updates, and process payments where applicable. We do not sell your data. For privacy
+            requests, contact us at the email below.
+          </p>
+        </section>
+
         <section className="mt-8 space-y-2 border-t border-orange-100 pt-6">
           <h2 className="text-base font-semibold text-gray-900">17. Contact</h2>
           <p className="text-sm text-gray-700">Samsara Wellness</p>

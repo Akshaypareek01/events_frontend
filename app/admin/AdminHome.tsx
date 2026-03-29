@@ -6,7 +6,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { AdminShell } from "@/components/layout/AdminShell";
 import { AdminLogoutButton } from "@/components/layout/AdminLogoutButton";
 import { AdminClassLinksPanel } from "./AdminClassLinksPanel";
-import { AdminProgramPanel } from "./AdminProgramPanel";
+import { AdminCorporateCompaniesPanel } from "./AdminCorporateCompaniesPanel";
 import { AdminStatsBar } from "./AdminStatsBar";
 import { AdminPaymentsPanel } from "./AdminPaymentsPanel";
 import { AdminRemindersPanel } from "./AdminRemindersPanel";
@@ -19,7 +19,7 @@ type TabId =
   | "users"
   | "corporate"
   | "payments"
-  | "domains"
+  | "companies"
   | "classes"
   | "reminders"
   | "teachers";
@@ -28,7 +28,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: "users", label: "Users" },
   { id: "corporate", label: "Corporate users" },
   { id: "payments", label: "Payments" },
-  { id: "domains", label: "Corporate domains" },
+  { id: "companies", label: "Corporate companies" },
   { id: "classes", label: "Class links" },
   { id: "teachers", label: "Teachers" },
   { id: "reminders", label: "Reminders" },
@@ -95,7 +95,7 @@ export function AdminHome() {
         {tab === "users" && <AdminUsersPanel mode="all" />}
         {tab === "corporate" && <AdminUsersPanel mode="corporate" />}
         {tab === "payments" && <AdminPaymentsPanel />}
-        {tab === "domains" && <AdminProgramPanel />}
+        {tab === "companies" && <AdminCorporateCompaniesPanel />}
         {tab === "classes" && <AdminClassLinksPanel />}
         {tab === "teachers" && <AdminTeachersPanel />}
         {tab === "reminders" && <AdminRemindersPanel />}

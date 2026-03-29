@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
+import { CorporateRegistrationFields } from "@/components/register/CorporateRegistrationFields";
 import { FieldError } from "@/components/ui/FieldError";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
@@ -18,6 +19,8 @@ export function RegisterForm() {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [userType, setUserType] = useState<UserType>("normal");
+  const [corporateCompanyId, setCorporateCompanyId] = useState("");
+  const [corporateCouponCode, setCorporateCouponCode] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -42,14 +45,26 @@ export function RegisterForm() {
         setFormError("Please complete all required fields.");
         return;
       }
-      const body = {
-        name: n,
-        email: em,
-        phone: ph,
-        city: ci,
-        country,
-        userType,
-      };
+      const body =
+        userType === "corporate"
+          ? {
+              name: n,
+              email: em,
+              phone: ph,
+              city: ci,
+              country,
+              userType: "corporate" as const,
+              corporateCompanyId,
+              corporateCouponCode: corporateCouponCode.trim(),
+            }
+          : {
+              name: n,
+              email: em,
+              phone: ph,
+              city: ci,
+              country,
+              userType: "normal" as const,
+            };
       const res = await fetch(`${getApiBaseUrl()}/api/v1/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,10 +85,11 @@ export function RegisterForm() {
           }
           setFieldErrors(next);
         }
-        if (res.status === 403 && data.code === "CORPORATE_NOT_AUTHORIZED") {
-          setFormError(
-            `${data.message ?? "Your work email is not on our authorized list."} You can switch to Individual below to pay and join.`,
-          );
+        if (
+          res.status === 403 &&
+          (data.code === "CORPORATE_INVALID_COUPON" || data.code === "CORPORATE_INVALID_COMPANY")
+        ) {
+          setFormError(data.message ?? "Corporate verification failed. Check company and coupon.");
         } else {
           setFormError(data.message ?? "Could not register");
         }
@@ -113,7 +129,14 @@ export function RegisterForm() {
           <select
             id="userType"
             value={userType}
-            onChange={(e) => setUserType(e.target.value as UserType)}
+            onChange={(e) => {
+              const v = e.target.value as UserType;
+              setUserType(v);
+              if (v === "normal") {
+                setCorporateCompanyId("");
+                setCorporateCouponCode("");
+              }
+            }}
             className={`${inputClass} appearance-none cursor-pointer pr-10`}
           >
             <option value="normal">Individual</option>
@@ -148,15 +171,14 @@ export function RegisterForm() {
       {/* Email */}
       <div>
         <label htmlFor="email" className={labelClass}>
-          {userType === "corporate" ? "Work Email" : "Email Address"}{" "}
-          <span className="text-orange-500">*</span>
+          Email address <span className="text-orange-500">*</span>
         </label>
         <input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
-          placeholder={userType === "corporate" ? "you@company.com" : "john.doe@example.com"}
+          placeholder={userType === "corporate" ? "you@gmail.com or work email" : "john.doe@example.com"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -236,6 +258,18 @@ export function RegisterForm() {
         <FieldError>{fieldErrors.country}</FieldError>
       </div>
 
+      {userType === "corporate" && (
+        <CorporateRegistrationFields
+          inputClass={inputClass}
+          labelClass={labelClass}
+          corporateCompanyId={corporateCompanyId}
+          onCorporateCompanyIdChange={setCorporateCompanyId}
+          couponCode={corporateCouponCode}
+          onCouponCodeChange={setCorporateCouponCode}
+          fieldErrors={fieldErrors}
+        />
+      )}
+
       {/* Terms & Conditions */}
       <div className="flex items-start gap-3">
         <input
@@ -247,11 +281,21 @@ export function RegisterForm() {
         />
         <label htmlFor="terms" className="cursor-pointer text-sm text-gray-600">
           I agree to the{" "}
-          <Link href="/terms-and-conditions" className="text-orange-500 underline hover:text-orange-600">
+          <Link
+            href="/terms-and-conditions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-500 underline hover:text-orange-600"
+          >
             Terms and Conditions
           </Link>{" "}
           &amp;{" "}
-          <Link href="#" className="text-orange-500 underline hover:text-orange-600">
+          <Link
+            href="/terms-and-conditions#privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-500 underline hover:text-orange-600"
+          >
             Privacy Policy
           </Link>
         </label>
