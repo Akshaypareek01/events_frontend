@@ -36,14 +36,18 @@ export default async function RegisterSuccessPage({
 
         <div className="flex flex-1 flex-col justify-center">
           <div className="rounded-2xl border border-gray-100 bg-white px-7 py-8 shadow-md">
-            <h1 className="text-2xl font-bold text-gray-900">Registration complete</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Registration Complete</h1>
             {corporate ? (
-              <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                You&apos;re registered for the <strong className="font-semibold text-gray-800">80-day</strong> Yoga
-                Mohotsav through your organisation. Your corporate access is active — no payment needed. Check your
-                inbox for a confirmation email, then sign in with the same email you used here; we&apos;ll send you a
-                one-time code to access your dashboard.
-              </p>
+              <div className="mt-4 space-y-4 text-sm leading-relaxed text-gray-600">
+                <p>
+                  You&apos;re successfully registered for the 80-Day Yoga Mahotsav through your organisation. Your
+                  corporate access is now active—no payment required.
+                </p>
+                <p>
+                  Please check your inbox for a confirmation email. Then, sign in using the same email address you
+                  used to register. We&apos;ll send you a one-time code to access your dashboard.
+                </p>
+              </div>
             ) : (
               <p className="mt-4 text-sm leading-relaxed text-gray-600">
                 Registration saved for the <strong className="font-semibold text-gray-800">80-day</strong> program.

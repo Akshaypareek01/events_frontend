@@ -14,6 +14,8 @@ type Props = {
   onCorporateCompanyIdChange: (id: string) => void;
   couponCode: string;
   onCouponCodeChange: (v: string) => void;
+  employeeId: string;
+  onEmployeeIdChange: (v: string) => void;
   fieldErrors: Record<string, string>;
 };
 
@@ -27,6 +29,8 @@ export function CorporateRegistrationFields({
   onCorporateCompanyIdChange,
   couponCode,
   onCouponCodeChange,
+  employeeId,
+  onEmployeeIdChange,
   fieldErrors,
 }: Props) {
   const [query, setQuery] = useState("");
@@ -175,6 +179,22 @@ export function CorporateRegistrationFields({
           className={inputClass}
         />
         <FieldError>{fieldErrors.corporateCouponCode}</FieldError>
+      </div>
+
+      <div>
+        <label htmlFor="corporateEmployeeId" className={labelClass}>
+          Employee ID
+        </label>
+        <input
+          id="corporateEmployeeId"
+          name="employeeId"
+          autoComplete="off"
+          placeholder="e.g. staff number — if your organisation uses one"
+          value={employeeId}
+          onChange={(e) => onEmployeeIdChange(e.target.value)}
+          className={inputClass}
+        />
+        <FieldError>{fieldErrors.employeeId}</FieldError>
       </div>
     </div>
   );

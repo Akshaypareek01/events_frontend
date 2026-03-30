@@ -17,6 +17,7 @@ export type AdminUserRow = {
   country?: string;
   companyName?: string;
   companyDomain?: string;
+  employeeId?: string;
   userType: string;
   paymentStatus: string;
   isApproved: boolean;
@@ -197,7 +198,7 @@ export function AdminUsersPanel({ mode }: Props) {
   const title = mode === "corporate" ? "Corporate users" : "Users";
   const from = data && data.total > 0 ? (data.page - 1) * data.limit + 1 : 0;
   const to = data ? Math.min(data.page * data.limit, data.total) : 0;
-  const colSpan = mode === "corporate" ? 10 : 9;
+  const colSpan = mode === "corporate" ? 11 : 9;
 
   return (
     <div className="space-y-4">
@@ -317,7 +318,12 @@ export function AdminUsersPanel({ mode }: Props) {
                   <th className="px-3 py-2">Email</th>
                   <th className="px-3 py-2">Phone</th>
                   <th className="px-3 py-2">City</th>
-                  {mode === "corporate" && <th className="px-3 py-2">Company</th>}
+                  {mode === "corporate" && (
+                    <>
+                      <th className="px-3 py-2">Company</th>
+                      <th className="px-3 py-2">Emp. ID</th>
+                    </>
+                  )}
                   <th className="px-3 py-2">Type</th>
                   <th className="px-3 py-2">Payment</th>
                   <th className="px-3 py-2">Approved</th>
@@ -351,9 +357,14 @@ export function AdminUsersPanel({ mode }: Props) {
                       <td className="px-3 py-2">{u.phone ?? "—"}</td>
                       <td className="px-3 py-2">{u.city ?? "—"}</td>
                       {mode === "corporate" && (
-                        <td className="max-w-[140px] truncate px-3 py-2" title={u.companyName}>
-                          {u.companyName ?? "—"}
-                        </td>
+                        <>
+                          <td className="max-w-[140px] truncate px-3 py-2" title={u.companyName}>
+                            {u.companyName ?? "—"}
+                          </td>
+                          <td className="max-w-[100px] truncate px-3 py-2 font-mono text-xs" title={u.employeeId}>
+                            {u.employeeId ?? "—"}
+                          </td>
+                        </>
                       )}
                       <td className="px-3 py-2">{u.userType}</td>
                       <td className="px-3 py-2">{u.paymentStatus}</td>

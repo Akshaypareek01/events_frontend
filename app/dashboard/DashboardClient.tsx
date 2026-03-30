@@ -21,6 +21,7 @@ type Me = {
   paymentStatus: "pending" | "paid" | "free";
   isApproved: boolean;
   companyName?: string;
+  employeeId?: string;
 };
 
 export function DashboardClient() {

@@ -21,6 +21,7 @@ export function RegisterForm() {
   const [userType, setUserType] = useState<UserType>("normal");
   const [corporateCompanyId, setCorporateCompanyId] = useState("");
   const [corporateCouponCode, setCorporateCouponCode] = useState("");
+  const [corporateEmployeeId, setCorporateEmployeeId] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -56,6 +57,9 @@ export function RegisterForm() {
               userType: "corporate" as const,
               corporateCompanyId,
               corporateCouponCode: corporateCouponCode.trim(),
+              ...(corporateEmployeeId.trim()
+                ? { employeeId: corporateEmployeeId.trim() }
+                : {}),
             }
           : {
               name: n,
@@ -135,6 +139,7 @@ export function RegisterForm() {
               if (v === "normal") {
                 setCorporateCompanyId("");
                 setCorporateCouponCode("");
+                setCorporateEmployeeId("");
               }
             }}
             className={`${inputClass} appearance-none cursor-pointer pr-10`}
@@ -266,6 +271,8 @@ export function RegisterForm() {
           onCorporateCompanyIdChange={setCorporateCompanyId}
           couponCode={corporateCouponCode}
           onCouponCodeChange={setCorporateCouponCode}
+          employeeId={corporateEmployeeId}
+          onEmployeeIdChange={setCorporateEmployeeId}
           fieldErrors={fieldErrors}
         />
       )}
