@@ -117,63 +117,6 @@ function sessionJoinStatus(
   return { text: "Available 5 minutes before start (IST).", color: "#9ca3af" };
 }
 
-const DASHBOARD_BATCH_TIMINGS: BatchTimingRow[][] = [
-  [
-    { label: "India (IST)", time: "6:00 AM – 7:00 AM" },
-    { label: "Singapore (SGT)", time: "8:30 AM – 9:30 AM" },
-    { label: "Australia (AEDT)", time: "11:00 AM – 12:00 PM" },
-    { label: "USA (EST)", time: "8:30 PM – 9:30 PM" },
-    { label: "UK (GMT)", time: "1:30 AM – 2:30 AM" },
-    { label: "Europe (CET)", time: "2:30 AM – 3:30 AM" },
-    { label: "Dubai (GST)", time: "4:30 AM – 5:30 AM" },
-  ],
-  [
-    { label: "India (IST)", time: "7:30 AM – 8:30 AM" },
-    { label: "Singapore (SGT)", time: "10:00 AM – 11:00 AM" },
-    { label: "Australia (AEDT)", time: "12:30 PM – 1:30 PM" },
-    { label: "USA (EST)", time: "10:00 PM – 11:00 PM" },
-    { label: "UK (GMT)", time: "3:00 AM – 4:00 AM" },
-    { label: "Europe (CET)", time: "4:00 AM – 5:00 AM" },
-    { label: "Dubai (GST)", time: "6:00 AM – 7:00 AM" },
-  ],
-  [
-    { label: "India (IST)", time: "9:00 AM – 10:00 AM" },
-    { label: "Singapore (SGT)", time: "11:30 AM – 12:30 PM" },
-    { label: "Australia (AEDT)", time: "2:00 PM – 3:00 PM" },
-    { label: "USA (EST)", time: "11:30 PM – 12:30 AM" },
-    { label: "UK (GMT)", time: "4:30 AM – 5:30 AM" },
-    { label: "Europe (CET)", time: "5:30 AM – 6:30 AM" },
-    { label: "Dubai (GST)", time: "7:30 AM – 8:30 AM" },
-  ],
-  [
-    { label: "India (IST)", time: "11:00 AM – 12:00 PM" },
-    { label: "Singapore (SGT)", time: "1:30 PM – 2:30 PM" },
-    { label: "Australia (AEDT)", time: "4:00 PM – 5:00 PM" },
-    { label: "USA (EST)", time: "1:30 AM – 2:30 AM" },
-    { label: "UK (GMT)", time: "6:30 AM – 7:30 AM" },
-    { label: "Europe (CET)", time: "7:30 AM – 8:30 AM" },
-    { label: "Dubai (GST)", time: "9:30 AM – 10:30 AM" },
-  ],
-  [
-    { label: "India (IST)", time: "5:00 PM – 6:00 PM" },
-    { label: "Singapore (SGT)", time: "7:30 PM – 8:30 PM" },
-    { label: "Australia (AEDT)", time: "10:00 PM – 11:00 PM" },
-    { label: "USA (EST)", time: "7:30 AM – 8:30 AM" },
-    { label: "UK (GMT)", time: "12:30 PM – 1:30 PM" },
-    { label: "Europe (CET)", time: "1:30 PM – 2:30 PM" },
-    { label: "Dubai (GST)", time: "3:30 PM – 4:30 PM" },
-  ],
-  [
-    { label: "India (IST)", time: "7:00 PM – 8:00 PM" },
-    { label: "Singapore (SGT)", time: "9:30 PM – 10:30 PM" },
-    { label: "Australia (AEDT)", time: "12:00 AM – 1:00 AM" },
-    { label: "USA (EST)", time: "9:30 AM – 10:30 AM" },
-    { label: "UK (GMT)", time: "2:30 PM – 3:30 PM" },
-    { label: "Europe (CET)", time: "3:30 PM – 4:30 PM" },
-    { label: "Dubai (GST)", time: "5:30 PM – 6:30 PM" },
-  ],
-];
-
 // ─── Timezone conversion ──────────────────────────────────────────────────────
 const TIMEZONES = [
   { label: "India (IST)",      tz: "Asia/Kolkata" },
@@ -236,7 +179,7 @@ function BatchCard({
   onJoin: (session: ClassRow) => Promise<void>;
 }) {
   const t = BATCH_THEMES[index % BATCH_THEMES.length];
-  const zones = DASHBOARD_BATCH_TIMINGS[index] ?? convertISTtoTimezones(c.timeLabel);
+  const zones = convertISTtoTimezones(c.timeLabel);
   const joinByTimeWindow = canJoinSessionNow(zones);
   const lockedToOtherSession = Boolean(joinedClassIdToday && joinedClassIdToday !== c.id);
   const joinEnabled = joinByTimeWindow && !lockedToOtherSession;
@@ -421,6 +364,12 @@ export function ClassScheduleSection({
 }) {
   const [joinBusyClassId, setJoinBusyClassId] = useState<string | null>(null);
   const [joinError, setJoinError] = useState<string | null>(null);
+  const orderedClasses = [...classes].sort((a, b) => {
+    const aNum = Number.parseInt((a.title.match(/\d+/)?.[0] ?? ""), 10);
+    const bNum = Number.parseInt((b.title.match(/\d+/)?.[0] ?? ""), 10);
+    if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) return aNum - bNum;
+    return a.title.localeCompare(b.title);
+  });
 
   async function handleJoin(session: ClassRow): Promise<void> {
     const token = getUserToken();
@@ -489,7 +438,7 @@ export function ClassScheduleSection({
           gridTemplateColumns: "repeat(3, 1fr)",   // ← always 3 cols like reference
           gap: 20,
         }}>
-          {classes.map((c, i) => (
+          {orderedClasses.map((c, i) => (
             <BatchCard
               key={c.id}
               c={c}
