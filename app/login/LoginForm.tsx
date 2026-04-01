@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { LoginSplitLayout } from "@/components/auth/LoginSplitLayout";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
@@ -261,14 +262,12 @@ export function LoginForm() {
           </div>
         </form>
 
-        {/* Teacher login link disabled for public users — re-enable if needed
         <p className="mt-6 text-center text-sm text-gray-500">
           Teacher (username & password)?{" "}
           <Link href="/teacher/login" className="font-semibold text-orange-500 hover:text-orange-600">
             Teacher login
           </Link>
         </p>
-        */}
       </LoginSplitLayout>
     );
   }
