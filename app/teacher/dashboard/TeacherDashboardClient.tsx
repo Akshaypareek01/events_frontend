@@ -156,7 +156,7 @@ export function TeacherDashboardClient() {
         ) : (
           <>
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {classes.map((c, i) => {
+              {classes.map((c) => {
                 const active = selectedClassId === c.id;
                 return (
                   <button
@@ -169,9 +169,9 @@ export function TeacherDashboardClient() {
                         : "border-[var(--color-border)] hover:border-orange-300"
                     }`}
                   >
-                    <p className="text-xs font-semibold uppercase tracking-wide text-orange-600">Batch {i + 1}</p>
-                    <h3 className="mt-1 text-sm font-semibold text-gray-900">{c.title}</h3>
+                    <h3 className="text-sm font-semibold text-gray-900">{c.title}</h3>
                     <p className="mt-1 text-xs text-gray-600">{c.timeLabel}</p>
+                    <p className="mt-1 text-[11px] uppercase tracking-wide text-gray-500">{c.type}</p>
                     <p className="mt-2 line-clamp-2 text-xs text-gray-500">
                       {active ? "Selected — update link below" : "Click to select this batch"}
                     </p>
