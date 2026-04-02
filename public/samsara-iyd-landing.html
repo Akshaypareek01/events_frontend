@@ -143,12 +143,21 @@ nav{
 .tier-silver-partners .tier-label{color:#7a8a9e;}.tier-silver-partners .tier-label::before,.tier-silver-partners .tier-label::after{background:rgba(122,138,158,.28);}
 .tier-community .tier-label{color:var(--text-lt);}
 .tier-community .sponsor-row{justify-content:center;}
-.tier-community .sponsor-item{flex-direction:column;align-items:center;gap:10px;padding:16px 28px;}
+.tier-community .sponsor-item{flex-direction:column;align-items:center;gap:0;padding:16px 24px;justify-content:center;}
 .tier-community .sp-icon img{width:auto;max-width:min(320px,88vw);max-height:80px;height:auto;object-fit:contain;}
 .tier-corporate-sponsors .tier-label{color:var(--text-lt);}
-.tier-corporate-sponsors .sp-icon img{width:56px;height:56px;max-width:56px;max-height:56px;object-fit:contain;border-radius:50%;}
+.tier-corporate-sponsors .sponsor-item{justify-content:center;padding:14px 20px;}
+.tier-corporate-sponsors .sp-icon img{width:72px;height:72px;max-width:100px;max-height:72px;object-fit:contain;}
+.tier-corporate-sponsors .sponsor-mark--round .sp-icon img{border-radius:50%;}
 .sponsor-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
 .sponsor-item{background:#fff;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;gap:12px;transition:.3s;}
+/* Event Sponsors: logos only (no captions on cards) */
+#sponsors .tier-gold .sponsor-item{justify-content:center;padding:20px 36px;}
+#sponsors .tier-gold .sp-icon img{width:auto;max-width:min(220px,70vw);max-height:56px;height:auto;object-fit:contain;}
+#sponsors .tier-silver .sponsor-item{justify-content:center;}
+#sponsors .tier-silver .sp-icon img{width:auto;max-width:min(200px,65vw);max-height:48px;height:auto;object-fit:contain;}
+#sponsors .tier-silver-partners .sponsor-item{justify-content:center;}
+#sponsors .tier-silver-partners .sp-icon img{width:auto;max-width:min(180px,55vw);max-height:44px;height:auto;object-fit:contain;}
 .tier-gold .sponsor-item{padding:22px 42px;}.tier-silver .sponsor-item{padding:16px 28px;}.tier-bronze .sponsor-item{padding:12px 22px;}
 .tier-gold .sponsor-item:hover{border-color:#C9952E;box-shadow:0 6px 20px rgba(201,149,46,.15);}
 .tier-silver .sponsor-item:hover,.tier-bronze .sponsor-item:hover{border-color:var(--saffron);box-shadow:0 6px 18px rgba(232,84,26,.1);}
@@ -386,11 +395,11 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
     <p class="s-sub">Visionary partners who believe in the power of wellness and mindful living</p>
   </div>
   <div style="max-width:1100px;margin:0 auto;" class="reveal">
-    <div class="tier tier-gold"><div class="tier-label">✦ Title Sponsor ✦</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Samsara logo"></div><div class="sp-name">Samsara</div></div></div></div>
-    <div class="tier tier-silver"><div class="tier-label">Gold Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Samsara logo"></div><div class="sp-name">Samsara</div></div></div></div>
-    <div class="tier tier-bronze tier-silver-partners"><div class="tier-label">Silver Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Samsara logo"></div><div class="sp-name">Samsara</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Samsara logo"></div><div class="sp-name">Samsara</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Samsara logo"></div><div class="sp-name">Samsara</div></div></div></div>
-    <div class="tier tier-bronze tier-community"><div class="tier-label">Community Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/Teachers/AnitaBorg.jpg" alt="AnitaB.org India" loading="lazy"></div><div class="sp-name">AnitaB.org India</div></div></div></div>
-    <div class="tier tier-bronze tier-corporate-sponsors"><div class="tier-label">Corporate Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/Teachers/GBITCIA.jpg" alt="GBITCIA — Greater Bengaluru IT Companies &amp; Industries Association" loading="lazy"></div><div class="sp-name">GBITCIA</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Corporate partner logo"></div><div class="sp-name">Samsara</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Corporate partner logo"></div><div class="sp-name">Samsara</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Corporate partner logo"></div><div class="sp-name">Samsara</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Corporate partner logo"></div><div class="sp-name">Samsara</div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Corporate partner logo"></div><div class="sp-name">Samsara</div></div></div></div>
+    <div class="tier tier-gold"><div class="tier-label">✦ Title Sponsor ✦</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Title sponsor — Samsara Wellness"></div></div></div></div>
+    <div class="tier tier-silver"><div class="tier-label">Gold Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Gold partner — Samsara Wellness"></div></div></div></div>
+    <div class="tier tier-bronze tier-silver-partners"><div class="tier-label">Silver Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Silver partner"></div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Silver partner"></div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Silver partner"></div></div></div></div>
+    <div class="tier tier-bronze tier-community"><div class="tier-label">Community Partners</div><div class="sponsor-row"><div class="sponsor-item"><div class="sp-icon"><img src="/Teachers/AnitaBorg.jpg" alt="AnitaB.org India" loading="lazy"></div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Community partner" loading="lazy"></div></div></div></div>
+    <div class="tier tier-bronze tier-corporate-sponsors"><div class="tier-label">Corporate Partners</div><div class="sponsor-row"><div class="sponsor-item sponsor-mark--round"><div class="sp-icon"><img src="/Teachers/GBITCIA.jpg" alt="GBITCIA — Greater Bengaluru IT Companies &amp; Industries Association" loading="lazy"></div></div><div class="sponsor-item"><div class="sp-icon"><img src="/samsaralogomain.png" alt="Samsara Wellness — corporate partner"></div></div></div></div>
     <!-- <div class="become-sponsor"><span class="s-eyebrow" style="display:block;margin-bottom:10px;">Become a Sponsor</span><h3>Align with <em style="font-style:italic;color:var(--saffron);">Wellness &amp; Purpose</em></h3><p>Reach 50,000+ wellness-conscious participants across India.
   </div> -->
 </section>
