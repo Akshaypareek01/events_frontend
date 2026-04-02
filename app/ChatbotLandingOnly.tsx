@@ -5,7 +5,12 @@ import { usePathname } from "next/navigation";
 
 export function ChatbotLandingOnly() {
   const pathname = usePathname();
-  if (pathname !== "/") return null;
+  const enabled =
+    pathname === "/login" ||
+    pathname === "/dashboard" ||
+    pathname === "/register" ||
+    pathname.startsWith("/register/");
+  if (!enabled) return null;
 
   return (
     <Script
