@@ -412,7 +412,7 @@ export function ClassScheduleSection({
         Class Schedule
       </h2>
       <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 24 }}>
-        Today&apos;s Live Zoom Sessions (Times in IST)
+        Today&apos;s Live Sessions (Times in IST)
       </p>
       {joinedClassIdToday && (
         <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 12 }}>

@@ -11,11 +11,16 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { getApiBaseUrl } from "@/lib/api";
 import { clearTeacherToken, getTeacherToken } from "@/lib/auth";
 import { type ClassRow } from "@/app/dashboard/ClassScheduleSection";
+import { DashboardAlert, type DashboardAlertColor } from "@/components/ui/DashboardAlert";
 
 type TeacherMe = {
   id: string;
   username: string;
   displayName: string;
+};
+
+type ProgramMeta = {
+  dashboardAlert?: { message: string; color: DashboardAlertColor };
 };
 
 export function TeacherDashboardClient() {
@@ -26,6 +31,7 @@ export function TeacherDashboardClient() {
   const [meetingLinkDraft, setMeetingLinkDraft] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
+  const [program, setProgram] = useState<ProgramMeta | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [classesErr, setClassesErr] = useState<string | null>(null);
 
@@ -38,9 +44,10 @@ export function TeacherDashboardClient() {
 
     void (async () => {
       try {
-        const [meRes, clsRes] = await Promise.all([
+        const [meRes, clsRes, programRes] = await Promise.all([
           fetch(`${base}/api/v1/teacher/me`, { headers }),
           fetch(`${base}/api/v1/classes/today`, { headers }),
+          fetch(`${base}/api/v1/program`),
         ]);
         const meJson = (await meRes.json()) as { teacher?: TeacherMe; message?: string };
         if (!meRes.ok || !meJson.teacher) { setErr(meJson.message ?? "Session invalid"); return; }
@@ -54,6 +61,9 @@ export function TeacherDashboardClient() {
             setMeetingLinkDraft(first.zoomLink);
           }
         } else setClassesErr(clsJson.message ?? "Could not load classes");
+
+        const programJson = (await programRes.json()) as ProgramMeta;
+        if (programRes.ok) setProgram(programJson);
       } catch { setErr("Network error"); }
     })();
   }, [router]);
@@ -122,6 +132,13 @@ export function TeacherDashboardClient() {
 
   return (
     <DashboardShell onLogout={logout}>
+      {program?.dashboardAlert?.message ? (
+        <DashboardAlert
+          className="mb-4"
+          message={program.dashboardAlert.message}
+          color={program.dashboardAlert.color}
+        />
+      ) : null}
       {/* Welcome */}
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 800, color: "#111827", lineHeight: 1.2 }}>
@@ -135,7 +152,7 @@ export function TeacherDashboardClient() {
           Class Schedule
         </h2>
         <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 24 }}>
-          Today&apos;s Live Zoom Sessions (Times in IST)
+          Today&apos;s Live Sessions (Times in IST)
         </p>
         {classesErr ? (
           <p style={{ color: "var(--color-danger)", fontSize: 14 }}>{classesErr}</p>
@@ -186,7 +203,7 @@ export function TeacherDashboardClient() {
                   <h3 className="text-base font-semibold text-[var(--color-text)]">
                     Update link for {selectedClass.title}
                   </h3>
-                  <p className="mt-1 text-sm text-[var(--color-muted)]">Paste the new Google Meet / Zoom URL.</p>
+                  <p className="mt-1 text-sm text-[var(--color-muted)]">Paste the new meeting URL.</p>
                 </div>
                 <Input
                   id="teacher-meeting-link"

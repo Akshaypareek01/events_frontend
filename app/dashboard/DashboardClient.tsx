@@ -11,6 +11,7 @@ import { getApiBaseUrl } from "@/lib/api";
 import { clearUserToken, getUserToken } from "@/lib/auth";
 import { UserStatusBadges } from "./DashboardBadges";
 import { ClassScheduleSection, type ClassRow } from "./ClassScheduleSection";
+import { DashboardAlert, type DashboardAlertColor } from "@/components/ui/DashboardAlert";
 
 type Me = {
   id: string;
@@ -24,11 +25,16 @@ type Me = {
   employeeId?: string;
 };
 
+type ProgramMeta = {
+  dashboardAlert?: { message: string; color: DashboardAlertColor };
+};
+
 export function DashboardClient() {
   const router = useRouter();
   const [me, setMe] = useState<Me | null>(null);
   const [classes, setClasses] = useState<ClassRow[]>([]);
   const [joinedClassIdToday, setJoinedClassIdToday] = useState<string | null>(null);
+  const [program, setProgram] = useState<ProgramMeta | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [classesErr, setClassesErr] = useState<string | null>(null);
 
@@ -43,9 +49,10 @@ export function DashboardClient() {
 
     void (async () => {
       try {
-        const [meRes, clsRes] = await Promise.all([
+        const [meRes, clsRes, programRes] = await Promise.all([
           fetch(`${base}/api/v1/me`, { headers }),
           fetch(`${base}/api/v1/classes/today`, { headers }),
+          fetch(`${base}/api/v1/program`),
         ]);
         const meJson = (await meRes.json()) as {
           user?: Me;
@@ -68,6 +75,9 @@ export function DashboardClient() {
         } else {
           setClassesErr(clsJson.message ?? "Could not load classes");
         }
+
+        const programJson = (await programRes.json()) as ProgramMeta;
+        if (programRes.ok) setProgram(programJson);
       } catch {
         setErr("Network error");
       }
@@ -105,6 +115,13 @@ export function DashboardClient() {
   if (!me.canAccess) {
     return (
       <DashboardShell>
+        {program?.dashboardAlert?.message ? (
+          <DashboardAlert
+            className="mb-4"
+            message={program.dashboardAlert.message}
+            color={program.dashboardAlert.color}
+          />
+        ) : null}
         <Card>
           <p className="text-[var(--color-muted)]">
             Complete payment or wait for corporate approval before accessing live links.
@@ -122,6 +139,13 @@ export function DashboardClient() {
 
   return (
     <DashboardShell>
+      {program?.dashboardAlert?.message ? (
+        <DashboardAlert
+          className="mb-4"
+          message={program.dashboardAlert.message}
+          color={program.dashboardAlert.color}
+        />
+      ) : null}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-text)] sm:text-3xl">

@@ -36,7 +36,7 @@ export function MarketingShell({
       </header>
       <main className="flex-1">{children}</main>
       <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]/60 py-8 text-center text-sm text-[var(--color-muted)]">
-        <p>80-day program · Live on Zoom · Questions? Email the organizers.</p>
+        <p>80-day program · Live sessions · Questions? Email the organizers.</p>
       </footer>
     </div>
   );

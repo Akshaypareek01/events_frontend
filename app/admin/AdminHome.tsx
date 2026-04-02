@@ -12,6 +12,7 @@ import { AdminPaymentsPanel } from "./AdminPaymentsPanel";
 import { AdminRemindersPanel } from "./AdminRemindersPanel";
 import { AdminUsersPanel } from "./AdminUsersPanel";
 import { AdminTeachersPanel } from "./AdminTeachersPanel";
+import { AdminProgramPanel } from "./AdminProgramPanel";
 import { cn } from "@/lib/cn";
 import { getAdminToken } from "@/lib/auth";
 
@@ -22,7 +23,8 @@ type TabId =
   | "companies"
   | "classes"
   | "reminders"
-  | "teachers";
+  | "teachers"
+  | "program";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "users", label: "Users" },
@@ -32,6 +34,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: "classes", label: "Class links" },
   { id: "teachers", label: "Teachers" },
   { id: "reminders", label: "Reminders" },
+  { id: "program", label: "Program & alerts" },
 ];
 
 export function AdminHome() {
@@ -99,6 +102,7 @@ export function AdminHome() {
         {tab === "classes" && <AdminClassLinksPanel />}
         {tab === "teachers" && <AdminTeachersPanel />}
         {tab === "reminders" && <AdminRemindersPanel />}
+        {tab === "program" && <AdminProgramPanel />}
       </section>
     </AdminShell>
   );
