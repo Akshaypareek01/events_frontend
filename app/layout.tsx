@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const fontDisplay = Fraunces({
@@ -37,6 +38,11 @@ export default function RootLayout({
     >
       <body className="flex min-h-dvh min-h-full flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] font-[family-name:var(--font-body)] antialiased">
         {children}
+        <Script
+          src="https://apis.chatbot.nvhotech.in/chatbot.js"
+          strategy="afterInteractive"
+          data-user-id="69ce0a8ddb5e1b75035784e3"
+        />
       </body>
     </html>
   );
