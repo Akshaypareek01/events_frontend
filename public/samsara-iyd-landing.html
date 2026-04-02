@@ -93,6 +93,16 @@ nav{
 .teacher-card:hover{transform:translateY(-8px);border-color:var(--saffron);box-shadow:0 18px 48px rgba(232,84,26,.12);}
 .t-img{height:220px;background:linear-gradient(160deg,#f5ece0,#eddcc8);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;overflow:hidden;}
 .t-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to top,#fff,transparent);}
+/* Static faculty grid (photo + name only) */
+.teachers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:1000px;margin:0 auto;padding:8px 24px 24px;align-items:stretch;}
+@media (max-width:900px){.teachers-grid{grid-template-columns:1fr;max-width:360px;}}
+.teachers-grid .teacher-card{width:100%;max-width:320px;margin:0 auto;cursor:default;}
+.teachers-grid .teacher-card:hover{transform:translateY(-4px);}
+.teachers-grid .t-img{height:280px;padding:0;background:#ede6dc;}
+.teachers-grid .t-img::after{display:none;}
+.teachers-grid .t-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.teachers-grid .t-info{padding:16px 18px 20px;text-align:center;}
+.teachers-grid .t-name{font-size:14px;margin-bottom:0;}
 .t-info{padding:18px 20px 22px;}
 .t-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:1px;color:var(--text);margin-bottom:4px;}
 .t-loc{font-size:11px;color:var(--saffron);letter-spacing:1px;margin-bottom:8px;}
@@ -277,23 +287,27 @@ footer{background:#1A0A00;padding:64px 80px 28px;}
     <span class="s-eyebrow">Our Faculty</span>
     <h2 class="s-title">World-Class <em>Yoga Masters</em></h2>
     <div class="s-divider"></div>
-    <p class="s-sub">Lineage-holders and internationally certified instructors — hover to pause</p>
+    <p class="s-sub">Meet our lead faculty for this celebration</p>
   </div>
-  <div class="carousel-outer reveal">
-    <div class="carousel-track">
-      <div class="teacher-card"><div class="t-img">🧘‍♀️</div><div class="t-info"><div class="t-name">Swami Priya Devi</div><div class="t-loc">Rishikesh, Uttarakhand</div><div class="t-spec">Classical Hatha Yoga & Pranayama. 30 years Sivananda lineage.</div><span class="t-tag">Hatha · Pranayama</span></div></div>
-      <div class="teacher-card"><div class="t-img">🧘‍♂️</div><div class="t-info"><div class="t-name">Acharya Suresh Nair</div><div class="t-loc">Kerala, South India</div><div class="t-spec">Ashtanga Vinyasa & Ayurvedic Yoga Therapy. Former SVYASA faculty.</div><span class="t-tag">Ashtanga · Therapy</span></div></div>
-      <div class="teacher-card"><div class="t-img">🌸</div><div class="t-info"><div class="t-name">Dr. Meera Krishnan</div><div class="t-loc">Chennai, Tamil Nadu</div><div class="t-spec">Iyengar Yoga & medical yoga research. PhD from Manipal University.</div><span class="t-tag">Iyengar · Medical</span></div></div>
-      <div class="teacher-card"><div class="t-img">🙏</div><div class="t-info"><div class="t-name">Guru Rajan Pillai</div><div class="t-loc">Mysore, Karnataka</div><div class="t-spec">Traditional Mysore-style Ashtanga. Pattabhi Jois lineage.</div><span class="t-tag">Mysore · Ashtanga</span></div></div>
-      <div class="teacher-card"><div class="t-img">✨</div><div class="t-info"><div class="t-name">Ananya Sharma</div><div class="t-loc">New Delhi, India</div><div class="t-spec">Kundalini Yoga & Sound Healing. Yogi Bhajan lineage.</div><span class="t-tag">Kundalini · Sound</span></div></div>
-      <div class="teacher-card"><div class="t-img">🌿</div><div class="t-info"><div class="t-name">Master Vikram Sen</div><div class="t-loc">Varanasi, Uttar Pradesh</div><div class="t-spec">Raja Yoga & Vedantic philosophy. Sanskrit scholar, 25+ years.</div><span class="t-tag">Raja · Meditation</span></div></div>
-      <div class="teacher-card"><div class="t-img">🌺</div><div class="t-info"><div class="t-name">Pooja Iyer</div><div class="t-loc">Mumbai, Maharashtra</div><div class="t-spec">Restorative Yoga & Yin. Corporate wellness specialist.</div><span class="t-tag">Restorative · Yin</span></div></div>
-      <div class="teacher-card"><div class="t-img">🔥</div><div class="t-info"><div class="t-name">Rohan Kapoor</div><div class="t-loc">Pune, Maharashtra</div><div class="t-spec">Power Yoga & Athletic Performance. India's top sports yoga coach.</div><span class="t-tag">Power · Sports</span></div></div>
-      <div class="teacher-card"><div class="t-img">🧘‍♀️</div><div class="t-info"><div class="t-name">Swami Priya Devi</div><div class="t-loc">Rishikesh, Uttarakhand</div><div class="t-spec">Classical Hatha Yoga & Pranayama. 30 years Sivananda lineage.</div><span class="t-tag">Hatha · Pranayama</span></div></div>
-      <div class="teacher-card"><div class="t-img">🧘‍♂️</div><div class="t-info"><div class="t-name">Acharya Suresh Nair</div><div class="t-loc">Kerala, South India</div><div class="t-spec">Ashtanga Vinyasa & Ayurvedic Yoga Therapy. Former SVYASA faculty.</div><span class="t-tag">Ashtanga · Therapy</span></div></div>
-      <div class="teacher-card"><div class="t-img">🌸</div><div class="t-info"><div class="t-name">Dr. Meera Krishnan</div><div class="t-loc">Chennai, Tamil Nadu</div><div class="t-spec">Iyengar Yoga & medical yoga research. PhD from Manipal University.</div><span class="t-tag">Iyengar · Medical</span></div></div>
-      <div class="teacher-card"><div class="t-img">🙏</div><div class="t-info"><div class="t-name">Guru Rajan Pillai</div><div class="t-loc">Mysore, Karnataka</div><div class="t-spec">Traditional Mysore-style Ashtanga. Pattabhi Jois lineage.</div><span class="t-tag">Mysore · Ashtanga</span></div></div>
-    </div>
+  <div class="teachers-grid reveal">
+    <article class="teacher-card">
+      <div class="t-img">
+        <img src="/Teachers/Shivangi%20Dwivedi.jpg" alt="Shivangi Dwivedi" width="320" height="280" loading="lazy" />
+      </div>
+      <div class="t-info"><div class="t-name">Shivangi Dwivedi</div></div>
+    </article>
+    <article class="teacher-card">
+      <div class="t-img">
+        <img src="/Teachers/Priyanka%20Sharma.jpg" alt="Priyanka Sharma" width="320" height="280" loading="lazy" />
+      </div>
+      <div class="t-info"><div class="t-name">Priyanka Sharma</div></div>
+    </article>
+    <article class="teacher-card">
+      <div class="t-img">
+        <img src="/Teachers/Neha%20Rahul%20Motwani.jpg" alt="Neha Rahul Motwani" width="320" height="280" loading="lazy" />
+      </div>
+      <div class="t-info"><div class="t-name">Neha Rahul Motwani</div></div>
+    </article>
   </div>
 </section>
 
