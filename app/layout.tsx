@@ -14,7 +14,7 @@ const fontBody = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Samsara Yoga — 80-Day Yoga Mohotsav",
+  title: "Samsara Wellness",
   description: "Register for The Moon Within. Individual checkout is ₹199, GST included.",
 };
 

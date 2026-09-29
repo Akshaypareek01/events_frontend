@@ -96,47 +96,14 @@ export default function RegisterPage() {
             <div className="w-full max-w-[500px]">
 
               {/* ── Header logos ── */}
-              <div className="mb-6 flex items-center justify-center gap-8">
-
-                {/* Ministry of Ayush */}
-                <div className="flex flex-col items-center gap-1.5">
-                  <Image
-                    src="/ministeryofayush.png"
-                    alt="Ministry of Ayush"
-                    width={64}
-                    height={64}
-                    className="h-16 w-auto object-contain"
-                  />
-                  <span className="max-w-[64px] text-center text-[10px] leading-tight text-gray-500">
-                    Ministry of Ayush<br />Govt. of India
-                  </span>
-                </div>
-
-                {/* Samsara */}
-                <div className="flex items-center">
-                  <Image
-                    src="/samsaralogomain.png"
-                    alt="Samsara"
-                    width={160}
-                    height={64}
-                    className="h-16 w-auto object-contain"
-                  />
-                </div>
-
-                {/* International Yoga Day */}
-                <div className="flex flex-col items-center gap-1.5">
-                  <Image
-                    src="/yogaday.png"
-                    alt="International Day of Yoga"
-                    width={64}
-                    height={64}
-                    className="h-16 w-auto object-contain"
-                  />
-                  <span className="max-w-[64px] text-center text-[10px] leading-tight text-gray-500">
-                    International<br />Yoga Day
-                  </span>
-                </div>
-
+              <div className="mb-6 flex items-center justify-center">
+                <Image
+                  src="/samsaralogomain.png"
+                  alt="Samsara"
+                  width={160}
+                  height={64}
+                  className="h-16 w-auto object-contain"
+                />
               </div>
 
               {/* ── Page title ── */}

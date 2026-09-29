@@ -42,8 +42,8 @@ export function MoonLanding() {
 function Hero() {
   return (
     <section aria-labelledby="moon-title" className="bg-[#fbf6ef]">
-      <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:py-16">
-        <div>
+      <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 pb-10 pt-4 sm:px-6 lg:grid-cols-2 lg:py-16">
+        <div className="order-2 lg:order-1">
           <p className="text-xs font-bold tracking-[0.14em] text-orange-700">
             ONLINE FULL MOON CIRCLE FOR WOMEN
           </p>
@@ -61,11 +61,11 @@ function Hero() {
           <p className="mt-5 text-xs font-bold tracking-wide text-orange-700">
             ONLINE · WOMEN ONLY · FULL MOON SPECIAL
           </p>
-          <div className="mt-6">
+          <div className="mt-6 flex justify-center lg:justify-start">
             <MoonCta>Join the Circle</MoonCta>
           </div>
         </div>
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl shadow-[0_18px_50px_rgba(28,25,20,0.12)] lg:max-w-none">
+        <div className="relative order-1 -mx-4 aspect-[4/5] w-[calc(100%+2rem)] max-w-none overflow-hidden sm:-mx-6 sm:w-[calc(100%+3rem)] lg:order-2 lg:mx-0 lg:w-full lg:rounded-3xl lg:shadow-[0_18px_50px_rgba(28,25,20,0.12)]">
           <Image
             src="/moon/hero.webp"
             alt="Woman sitting by moonlit water, hosting The Moon Within circle"
