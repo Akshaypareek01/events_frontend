@@ -4,12 +4,12 @@ import type { ReactNode } from "react";
 /** Left hero image — shared by `/login` and `/teacher/login`. */
 function LeftPanel() {
   return (
-    <div className="relative hidden w-2/5 shrink-0 overflow-hidden lg:block">
+    <div className="relative hidden w-2/5 shrink-0 overflow-hidden bg-[#fbf6ef] lg:block">
       <Image
-        src="/yogamahotsavlogin.png"
-        alt="International Yoga Day"
+        src="/moon/hero.webp"
+        alt="Woman sitting by moonlit water, hosting The Moon Within circle"
         fill
-        className="object-cover object-center"
+        className="object-contain object-center"
         priority
       />
     </div>

@@ -143,7 +143,7 @@ export function PayClient() {
   }, []);
 
   const pay = useCallback(async () => {
-    if (!userId || !keyId) return;
+    if (!userId) return;
     const sessionJwt = getUserToken();
     if (!payToken && !sessionJwt) {
       setErr(
@@ -175,7 +175,8 @@ export function PayClient() {
         setErr(orderData.message ?? "Could not start payment");
         return;
       }
-      if (!window.Razorpay || !orderData.orderId || orderData.amount == null) {
+      const checkoutKey = orderData.keyId ?? keyId;
+      if (!window.Razorpay || !orderData.orderId || orderData.amount == null || !checkoutKey) {
         setErr("Checkout unavailable");
         return;
       }
@@ -183,7 +184,7 @@ export function PayClient() {
       const checkoutLogoUrl = razorpayCheckoutLogoUrl();
 
       const rzp = new window.Razorpay({
-        key: orderData.keyId ?? keyId,
+        key: checkoutKey,
         amount: orderData.amount,
         currency: orderData.currency ?? "INR",
         /** Merchant title on Razorpay modal (font is usually set in Razorpay Dashboard → Checkout styling → Times). */
@@ -232,20 +233,6 @@ export function PayClient() {
     );
   }
 
-  if (!keyId) {
-    return (
-      <PaySurface>
-        <div className="w-full max-w-lg text-balance text-center">
-          <IydCard>
-            <p className="max-w-md text-[15px] font-light leading-relaxed text-[#C2400D]">
-              NEXT_PUBLIC_RAZORPAY_KEY_ID is not set in the frontend environment.
-            </p>
-          </IydCard>
-        </div>
-      </PaySurface>
-    );
-  }
-
   return (
     <PaySurface>
       <Script
@@ -274,7 +261,7 @@ export function PayClient() {
           Complete payment
         </h1>
         <p className="mx-auto mt-3 max-w-md text-[15px] font-light leading-relaxed text-[#5A3C22]">
-          Secured by Razorpay · ₹499 + 18% GST (total ₹588.82)
+          Secured by Razorpay · ₹199 (GST included)
         </p>
         <IydCard className="mt-8 gap-4">
           {err && (

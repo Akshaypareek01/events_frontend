@@ -35,7 +35,7 @@ export function AdminProgramPanel() {
       setProgram({
         title: "Samsara — 80-Day Yoga Mohotsav",
         durationMonths: 3,
-        priceInr: 499,
+        priceInr: 199,
         currency: "INR",
         allowedCorporateDomains: [],
       });
@@ -54,7 +54,7 @@ export function AdminProgramPanel() {
         setProgram({
           title: "Samsara — 80-Day Yoga Mohotsav",
           durationMonths: 3,
-          priceInr: 499,
+          priceInr: 199,
           currency: "INR",
           allowedCorporateDomains: [],
         });
@@ -70,7 +70,7 @@ export function AdminProgramPanel() {
       setProgram({
         title: "Samsara — 80-Day Yoga Mohotsav",
         durationMonths: 3,
-        priceInr: 499,
+        priceInr: 199,
         currency: "INR",
         allowedCorporateDomains: [],
       });

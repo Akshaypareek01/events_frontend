@@ -15,7 +15,7 @@ const fontBody = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Samsara Yoga — 80-Day Yoga Mohotsav",
-  description: "Daily morning & evening live classes. Register for ₹499 + 18% GST (₹588.82) or via your company.",
+  description: "Register for The Moon Within. Individual checkout is ₹199, GST included.",
 };
 
 /** Mobile-first: proper scaling + theme color for browser chrome. */

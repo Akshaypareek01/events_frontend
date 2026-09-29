@@ -51,7 +51,7 @@ export default async function RegisterSuccessPage({
             ) : (
               <p className="mt-4 text-sm leading-relaxed text-gray-600">
                 Registration saved for the <strong className="font-semibold text-gray-800">80-day</strong> program.
-                Complete payment (₹499 + 18% GST = ₹588.82) when prompted — you&apos;ll get a link by email. After
+                Complete payment (₹199, GST included) when prompted — you&apos;ll get a link by email. After
                 payment, sign in from the login page with your email.
               </p>
             )}
