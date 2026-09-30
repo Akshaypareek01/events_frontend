@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AppDownloadBanner } from "@/components/landing/moon/AppDownloadBanner";
 import { MoonCta } from "@/components/landing/moon/MoonCta";
 import { MoonHeader } from "@/components/landing/moon/MoonHeader";
 import {
@@ -33,6 +34,7 @@ export function MoonLanding() {
         <HostedBy />
         <Faq />
         <FinalCta />
+        <AppDownloadBanner />
       </main>
       <SiteFooter />
     </div>

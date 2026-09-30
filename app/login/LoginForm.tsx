@@ -263,9 +263,9 @@ export function LoginForm() {
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Teacher (username & password)?{" "}
-          <Link href="/teacher/login" className="font-semibold text-orange-500 hover:text-orange-600">
-            Teacher login
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="font-semibold text-orange-500 hover:text-orange-600">
+            Register
           </Link>
         </p>
       </LoginSplitLayout>

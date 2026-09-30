@@ -20,7 +20,7 @@ type Props = { children: ReactNode };
 
 /**
  * Split-screen auth shell: decorative left panel (lg+), white right column with logo,
- * scrollable content, copyright footer — matches participant `/login`.
+ * and scrollable content. Shared by participant and teacher login.
  */
 export function LoginSplitLayout({ children }: Props) {
   return (
@@ -49,12 +49,6 @@ export function LoginSplitLayout({ children }: Props) {
           <div className="flex flex-1 flex-col items-center justify-center py-6">
             <div className="w-full max-w-[500px]">{children}</div>
           </div>
-
-          <p className="pt-4 text-center text-xs text-gray-400">
-            Copyright© 2025 Samsaraa Wellness Pvt Ltd. All rights reserved.
-            <br />
-            Powered by Samsaraa Wellness Pvt Ltd
-          </p>
         </div>
       </div>
     </div>
