@@ -298,7 +298,7 @@ export function RegisterForm() {
           </Link>{" "}
           &amp;{" "}
           <Link
-            href="/terms-and-conditions#privacy"
+            href="/privacy-policy"
             target="_blank"
             rel="noopener noreferrer"
             className="text-orange-500 underline hover:text-orange-600"

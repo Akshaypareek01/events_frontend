@@ -390,7 +390,7 @@ function SiteFooter() {
           <a href="mailto:legal@samsarawellness.com" className="hover:text-orange-600">
             Contact
           </a>
-          <Link href="/terms-and-conditions#privacy" className="hover:text-orange-600">
+          <Link href="/privacy-policy" className="hover:text-orange-600">
             Privacy
           </Link>
           <Link href="/terms-and-conditions" className="hover:text-orange-600">

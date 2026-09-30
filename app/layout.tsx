@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { ChatbotLandingOnly } from "./ChatbotLandingOnly";
 
 const fontDisplay = Fraunces({
@@ -38,6 +39,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-dvh min-h-full flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] font-[family-name:var(--font-body)] antialiased">
         {children}
+        <MetaPixel />
         <ChatbotLandingOnly />
       </body>
     </html>
