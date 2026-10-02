@@ -8,6 +8,7 @@ import { FieldError } from "@/components/ui/FieldError";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
 import { COUNTRY_OPTIONS } from "@/lib/countries";
+import { trackRegistration } from "@/lib/metaPixel";
 
 type UserType = "normal" | "corporate";
 
@@ -99,6 +100,14 @@ export function RegisterForm() {
         }
         return;
       }
+      trackRegistration({
+        userType,
+        email: em,
+        phone: ph,
+        name: n,
+        city: ci,
+        userId: data.userId,
+      });
       if (userType === "corporate") {
         router.push("/register/success?kind=corporate");
       } else if (data.userId && data.payToken) {

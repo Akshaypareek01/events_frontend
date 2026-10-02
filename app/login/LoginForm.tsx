@@ -7,6 +7,7 @@ import { LoginSplitLayout } from "@/components/auth/LoginSplitLayout";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
 import { setUserToken } from "@/lib/auth";
+import { trackAddToCart, trackLogin } from "@/lib/metaPixel";
 
 const COOLDOWN_SEC = 60;
 
@@ -134,6 +135,7 @@ export function LoginForm() {
         return;
       }
       setUserToken(data.token);
+      trackLogin(email);
       router.push("/dashboard");
     } catch {
       setErr("Network error");
@@ -264,7 +266,11 @@ export function LoginForm() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-semibold text-orange-500 hover:text-orange-600">
+          <Link
+            href="/register"
+            className="font-semibold text-orange-500 hover:text-orange-600"
+            onClick={() => trackAddToCart()}
+          >
             Register
           </Link>
         </p>

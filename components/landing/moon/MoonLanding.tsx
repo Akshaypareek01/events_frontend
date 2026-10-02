@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { MetaContactLink, MetaRegisterLink } from "@/components/analytics/MetaLinks";
+import { TrackViewContent } from "@/components/analytics/TrackViewContent";
 import { AppDownloadBanner } from "@/components/landing/moon/AppDownloadBanner";
 import { MoonCta } from "@/components/landing/moon/MoonCta";
 import { MoonHeader } from "@/components/landing/moon/MoonHeader";
@@ -20,6 +22,7 @@ const display = "font-[family-name:var(--font-display)]";
 export function MoonLanding() {
   return (
     <div className="bg-[#f4f1ec] text-gray-900">
+      <TrackViewContent />
       <MoonHeader />
       <main>
         <Hero />
@@ -389,9 +392,7 @@ function SiteFooter() {
           <a href={SAMSARA_SITE} target="_blank" rel="noreferrer" className="hover:text-orange-600">
             About
           </a>
-          <a href="mailto:legal@samsarawellness.com" className="hover:text-orange-600">
-            Contact
-          </a>
+          <MetaContactLink className="hover:text-orange-600">Contact</MetaContactLink>
           <Link href="/privacy-policy" className="hover:text-orange-600">
             Privacy
           </Link>
@@ -401,9 +402,7 @@ function SiteFooter() {
           <Link href="/login" className="hover:text-orange-600">
             Login
           </Link>
-          <Link href="/register" className="hover:text-orange-600">
-            Register
-          </Link>
+          <MetaRegisterLink className="hover:text-orange-600">Register</MetaRegisterLink>
         </nav>
       </div>
       <p className="border-t border-orange-50 py-4 text-center text-xs text-gray-400">

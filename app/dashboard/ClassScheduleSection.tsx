@@ -5,6 +5,7 @@ import { moonEvent } from "@/components/landing/moon/content";
 import { getApiBaseUrl } from "@/lib/api";
 import { getUserToken } from "@/lib/auth";
 import { moonEventZoneTimes, moonJoinPhase, moonJoinStatus } from "@/lib/moonEventSchedule";
+import { trackJoinSession } from "@/lib/metaPixel";
 
 export type ClassRow = {
   id: string;
@@ -130,6 +131,7 @@ export function ClassScheduleSection({
         return;
       }
       onJoinedClassIdChange(data.joinedClassIdToday ?? session.id);
+      trackJoinSession();
       window.open(session.zoomLink, "_blank", "noopener,noreferrer");
     } catch {
       setJoinError("Network error. Please try again.");

@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/Spinner";
 import { getApiBaseUrl } from "@/lib/api";
 import { getUserToken } from "@/lib/auth";
+import { trackAddPaymentInfo, trackInitiateCheckout, trackPurchase } from "@/lib/metaPixel";
 
 /** IYD landing tokens — same as `public/samsara-iyd-landing.html` */
 const iy = {
@@ -118,6 +119,10 @@ export function PayClient() {
 
   const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "";
 
+  useEffect(() => {
+    if (userId) trackInitiateCheckout(userId);
+  }, [userId]);
+
   /**
    * `next/script` `onLoad` often does not run after client-side navigation when the script is
    * already cached — `scriptReady` stayed false until a full refresh. Detect `window.Razorpay`
@@ -182,11 +187,14 @@ export function PayClient() {
       }
 
       const checkoutLogoUrl = razorpayCheckoutLogoUrl();
+      const amountPaise = orderData.amount;
+      const currency = orderData.currency ?? "INR";
+      trackAddPaymentInfo(orderData.orderId, amountPaise, currency);
 
       const rzp = new window.Razorpay({
         key: checkoutKey,
-        amount: orderData.amount,
-        currency: orderData.currency ?? "INR",
+        amount: amountPaise,
+        currency,
         /** Merchant title on Razorpay modal (font is usually set in Razorpay Dashboard → Checkout styling → Times). */
         name: "Samsara",
         description: "Program fee",
@@ -207,6 +215,7 @@ export function PayClient() {
             setErr("Payment verification failed — contact support with your receipt.");
             return;
           }
+          trackPurchase(response.razorpay_payment_id, amountPaise, currency);
           router.push("/dashboard");
         },
       });

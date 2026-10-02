@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useHasUserToken } from "@/hooks/useHasUserToken";
+import { trackAddToCart } from "@/lib/metaPixel";
 
 const links = [
   { href: "#explore", label: "Experience" },
@@ -62,7 +63,10 @@ function AuthActions({ loggedIn, onNavigate, stacked }: { loggedIn: boolean; onN
       </Link>
       <Link
         href="/register"
-        onClick={onNavigate}
+        onClick={() => {
+          trackAddToCart();
+          onNavigate?.();
+        }}
         className="inline-flex min-h-11 items-center justify-center rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600"
       >
         Register

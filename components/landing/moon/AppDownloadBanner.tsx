@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { trackAppDownloadClick } from "@/lib/metaPixel";
 
 const PLAY_STORE =
   "https://play.google.com/store/apps/details?id=com.samsarawellnessyogav3.app";
@@ -38,6 +39,7 @@ export function AppDownloadBanner() {
         rel="noopener noreferrer"
         aria-label={`Join Samsara Wellness on ${storeName}`}
         className="mx-auto block max-w-md overflow-hidden rounded-3xl shadow-[0_18px_50px_rgba(28,25,20,0.12)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-500 md:max-w-6xl"
+        onClick={() => trackAppDownloadClick(href === APP_STORE ? "app_store" : "play_store")}
       >
         <Image
           src="/moon/app-banner-mobile.webp"

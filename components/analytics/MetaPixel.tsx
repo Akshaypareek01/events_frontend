@@ -3,14 +3,7 @@
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-
-const META_PIXEL_ID = "860541446358408";
-
-declare global {
-  interface Window {
-    fbq?: (...args: unknown[]) => void;
-  }
-}
+import { META_PIXEL_ID, trackPageView } from "@/lib/metaPixel";
 
 /**
  * Loads the Meta Pixel and sends PageView, including client-side route changes.
@@ -25,7 +18,7 @@ export function MetaPixel() {
       skipInitial.current = false;
       return;
     }
-    window.fbq?.("track", "PageView");
+    trackPageView();
   }, [pathname]);
 
   return (

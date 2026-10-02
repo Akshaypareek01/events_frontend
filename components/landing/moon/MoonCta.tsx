@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useHasUserToken } from "@/hooks/useHasUserToken";
+import { trackAddToCart } from "@/lib/metaPixel";
 
 const solid =
   "inline-flex min-h-11 items-center justify-center rounded-full bg-orange-500 px-8 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500";
@@ -24,7 +25,13 @@ export function MoonCta({ children, tone = "solid", className = "" }: MoonCtaPro
   const href = loggedIn ? "/dashboard" : "/register";
 
   return (
-    <Link href={href} className={`${tone === "solid" ? solid : outline} ${className}`}>
+    <Link
+      href={href}
+      className={`${tone === "solid" ? solid : outline} ${className}`}
+      onClick={() => {
+        if (!loggedIn) trackAddToCart();
+      }}
+    >
       {loggedIn ? "Go to dashboard" : children}
     </Link>
   );
